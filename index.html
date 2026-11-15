@@ -2,356 +2,542 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guia de Portais e Bosses — Modpack NeoForge 1.21.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<title>Guia do Modpack — NeoForge 1.21.1</title>
 <style>
-  :root{
-    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2a2f3a;
-    --txt:#e7e9ee; --mut:#9aa3b2; --acc:#7ee787; --warn:#f2cc60; --bad:#ff7b72;
-    --cell:34px;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-  header{padding:36px 20px 18px;max-width:1150px;margin:auto}
-  h1{margin:0 0 6px;font-size:30px;letter-spacing:.3px}
-  h1 span{color:var(--acc)}
-  .sub{color:var(--mut);margin:0}
-  .bar{position:sticky;top:0;z-index:5;background:rgba(15,17,21,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-  .bar .in{max-width:1150px;margin:auto;padding:12px 20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  input[type=search]{flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:15px}
-  .chip{background:var(--panel2);border:1px solid var(--line);color:var(--mut);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:13px;user-select:none}
-  .chip.on{color:#0f1115;background:var(--acc);border-color:var(--acc);font-weight:600}
-  main{max-width:1150px;margin:auto;padding:18px 20px 60px}
-  .alert{background:#2a1f12;border:1px solid #6b4a1a;color:#ffd8a0;padding:12px 14px;border-radius:10px;margin:0 0 18px}
-  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
-  .toc a{color:var(--txt);text-decoration:none;background:var(--panel);border:1px solid var(--line);padding:6px 10px;border-radius:8px;font-size:13px}
-  .toc a:hover{border-color:var(--acc)}
-  .mod{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:0 0 22px;overflow:hidden}
-  .mod>.hd{display:flex;gap:14px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);cursor:pointer}
-  .dot{width:14px;height:14px;border-radius:4px;flex:none;box-shadow:0 0 12px currentColor}
-  .mod h2{margin:0;font-size:20px}
-  .tag{font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
-  .hd .arrow{margin-left:auto;color:var(--mut);transition:transform .2s}
-  .mod.closed .arrow{transform:rotate(-90deg)}
-  .mod.closed .bd{display:none}
-  .bd{padding:4px 18px 18px}
-  .dim{border-top:1px dashed var(--line);padding:16px 0 4px}
-  .dim:first-child{border-top:0}
-  .dim h3{margin:0 0 8px;font-size:17px}
-  .row{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
-  .info{flex:1;min-width:280px}
-  .info p{margin:6px 0}
-  .steps{margin:6px 0 10px;padding-left:20px}
-  .steps li{margin:4px 0}
-  .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:10px 0 4px}
-  .bosses{display:flex;flex-wrap:wrap;gap:6px}
-  .boss{background:#2b1717;border:1px solid #5a2a2a;color:#ffc9c4;padding:4px 9px;border-radius:7px;font-size:13px}
-  .boss small{color:#d99;opacity:.85}
-  .none{color:var(--mut);font-style:italic}
-  .note{color:var(--warn);font-size:13.5px}
-  .figs{display:flex;gap:22px;flex-wrap:wrap}
-  figure{margin:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
-  figcaption{font-size:12.5px;color:var(--mut);margin-top:8px;max-width:260px}
-  .grid{display:grid;gap:2px}
-  .c{width:var(--cell);height:var(--cell);border-radius:3px;position:relative}
-  .c.air{background:transparent;outline:1px dashed #2c3240;outline-offset:-1px}
-  .c.blk{box-shadow:inset 0 -4px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.12)}
-  .c.portal{animation:shim 2.4s ease-in-out infinite}
-  .c.opt{opacity:.45;outline:2px dashed rgba(255,255,255,.5);outline-offset:-3px}
-  .c[data-t]:hover::after{content:attr(data-t);position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#000;color:#fff;font-size:11px;padding:3px 6px;border-radius:4px;white-space:nowrap;z-index:3}
-  @keyframes shim{50%{filter:brightness(1.35)}}
-  .craft{display:flex;align-items:center;gap:10px}
-  .craft .grid{background:#3b3f48;padding:4px;border-radius:6px}
-  .craft .c{width:30px;height:30px;background:#8b8f99;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#111}
-  .craft .c.e{background:#6e727b}
-  .craft .out{font-size:22px;color:var(--mut)}
-  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:8px;font-size:12.5px;color:var(--mut)}
-  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-  .src{font-size:12.5px;color:var(--mut)}
-  footer{max-width:1150px;margin:auto;padding:0 20px 40px;color:var(--mut);font-size:13px}
-  @media (max-width:560px){:root{--cell:26px} h1{font-size:24px}}
+:root{--bg:#0e1014;--p1:#161920;--p2:#1d212a;--p3:#252a35;--ln:#2b3140;--tx:#e8eaf0;--mu:#9aa3b3;--ac:#7ee787;--ac2:#58a6ff;--wa:#f2cc60;--rd:#ff7b72;--cell:30px;--r:14px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+a{color:var(--ac2)}
+code{background:var(--p3);padding:1px 6px;border-radius:6px;font-size:.92em}
+.top{position:sticky;top:0;z-index:20;background:rgba(14,16,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.top .in{max-width:1000px;margin:auto;padding:10px 14px 10px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand b{font-size:17px}
+.brand span{color:var(--mu);font-size:13px}
+.logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 0deg,#7ee787,#58a6ff,#c04cff,#ff8a3d,#7ee787);flex:none}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;background:var(--p2);border:1px solid var(--ln);color:var(--tx);padding:11px 12px;border-radius:12px;font-size:16px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--p2);border:1px solid var(--ln);color:var(--mu);padding:7px 12px;border-radius:999px;font-size:13.5px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#0b0d10;font-weight:700}
+main{max-width:1000px;margin:auto;padding:14px}
+.page{display:none}
+.page.on{display:block}
+h1{font-size:24px;margin:8px 0 4px}
+h2{font-size:20px;margin:22px 0 10px}
+.lead{color:var(--mu);margin:0 0 14px}
+.alert{background:#2a1f12;border:1px solid #6b4a1a;color:#ffd8a0;padding:12px 14px;border-radius:12px;margin:0 0 14px;font-size:15px}
+.tip{background:#122318;border:1px solid #23573a;color:#c6f5d3;padding:12px 14px;border-radius:12px;margin:10px 0;font-size:15px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{background:var(--p1);border:1px solid var(--ln);border-radius:var(--r);overflow:hidden}
+.card+.card{margin-top:12px}
+.card{scroll-margin-top:170px}
+.grid2 .card+.card{margin-top:0}
+.ch{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;user-select:none}
+.ch .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;background:var(--p3)}
+.ch .tt{flex:1;min-width:0}
+.ch .tt b{display:block;font-size:16.5px;line-height:1.25}
+.ch .tt small{color:var(--mu);font-size:13px}
+.ch .ar{color:var(--mu);transition:transform .2s;flex:none}
+.card.open .ch .ar{transform:rotate(180deg)}
+.cb{display:none;padding:0 14px 14px;border-top:1px solid var(--ln)}
+.card.open .cb{display:block}
+.k{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mu);margin:14px 0 5px;font-weight:600}
+.cb p{margin:6px 0}
+ol,ul{margin:6px 0;padding-left:22px}
+li{margin:5px 0}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--ln);color:var(--mu);background:var(--p2)}
+.pill.ow{color:#a7f3a0;border-color:#2f5a2c}.pill.nether{color:#ffb4a6;border-color:#6a2d24}.pill.end{color:#e5c6ff;border-color:#4d2f6a}.pill.dim{color:#9fd2ff;border-color:#24496d}
+.stars{color:var(--wa);letter-spacing:1px;font-size:13px}
+.boss{display:inline-block;background:#2b1717;border:1px solid #5a2a2a;color:#ffcbc6;padding:4px 9px;border-radius:8px;font-size:13.5px;margin:3px 4px 3px 0}
+.boss small{color:#e3a3a0}
+.drops{color:#d7c58a}
+.figs{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+figure{margin:0;background:var(--p2);border:1px solid var(--ln);border-radius:12px;padding:10px;max-width:100%}
+figcaption{font-size:13px;color:var(--mu);margin-top:6px;max-width:250px}
+.g{display:grid;gap:2px}
+.c{width:var(--cell);height:var(--cell);border-radius:3px;position:relative}
+.c.air{outline:1px dashed #303748;outline-offset:-1px}
+.c.blk{box-shadow:inset 0 -4px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.13)}
+.c.pt{animation:sh 2.4s ease-in-out infinite}
+.c.op{opacity:.45;outline:2px dashed rgba(255,255,255,.5);outline-offset:-3px}
+@keyframes sh{50%{filter:brightness(1.35)}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px;font-size:12.5px;color:var(--mu)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.craft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.craft .g{background:#3b3f48;padding:4px;border-radius:6px;grid-template-columns:repeat(3,34px)}
+.craft .s{width:34px;height:34px;border-radius:3px;background:#6e727b;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#111;text-align:center;line-height:1}
+.craft .out{color:var(--mu);font-size:20px}
+.ingr{font-size:12.5px;color:var(--mu);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
+th{color:var(--mu);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.05em}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.step{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--ln)}
+.step:last-child{border:0}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--ac);color:#0b0d10;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.empty{color:var(--mu);text-align:center;padding:30px 10px}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(18,20,26,.97);backdrop-filter:blur(8px);border-top:1px solid var(--ln);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.nav button{flex:1;background:none;border:0;color:var(--mu);font:inherit;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;cursor:pointer}
+.nav button .e{font-size:21px;line-height:1}
+.nav button.on{color:var(--ac);background:rgba(126,231,135,.08)}
+.count{color:var(--mu);font-size:13px;margin:4px 0 10px}
+footer{color:var(--mu);font-size:13px;padding:20px 0}
+@media(min-width:900px){
+  body{padding-bottom:0}
+  .nav{position:sticky;top:0;bottom:auto;justify-content:center;gap:6px;border-top:0;border-bottom:1px solid var(--ln)}
+  .nav button{flex:none;flex-direction:row;font-size:14px;padding:10px 16px;gap:8px}
+  .nav button .e{font-size:17px}
+}
+@media(max-width:380px){:root{--cell:24px} .craft .g{grid-template-columns:repeat(3,30px)} .craft .s{width:30px;height:30px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>Guia de <span>Portais &amp; Bosses</span></h1>
-  <p class="sub">Todas as dimensões do modpack NeoForge 1.21.1: como chegar em cada uma e quais bosses existem lá. Passe o mouse em cima dos blocos pra ver o nome.</p>
-</header>
 
-<div class="bar"><div class="in">
-  <input type="search" id="q" placeholder="Buscar mod, dimensão, boss ou bloco…">
-  <span class="chip on" data-f="all">Tudo</span>
-  <span class="chip" data-f="portal">Portal construído</span>
-  <span class="chip" data-f="item">Item / ritual</span>
-  <span class="chip" data-f="found">Achar no mundo</span>
-  <span class="chip" id="toggle">Recolher tudo</span>
+<nav class="nav" id="nav">
+  <button data-p="inicio" class="on"><span class="e">🏠</span>Início</button>
+  <button data-p="dims"><span class="e">🌀</span>Dimensões</button>
+  <button data-p="bosses"><span class="e">💀</span>Bosses</button>
+  <button data-p="eventos"><span class="e">🌕</span>Eventos</button>
+  <button data-p="mods"><span class="e">📦</span>Mods</button>
+</nav>
+
+<div class="top"><div class="in">
+  <div class="brand"><div class="logo"></div><div><b>Guia do Modpack</b><br><span>NeoForge 1.21.1 · dimensões, bosses e mods</span></div></div>
+  <div class="search"><input id="q" type="search" placeholder="Buscar boss, mod, item, bloco…" autocomplete="off"></div>
+  <div class="chips" id="chips"></div>
 </div></div>
 
 <main>
-  <div class="alert">⚠️ <b>Atenção:</b> na pasta <code>mods</code> tem o <b>Lands of Icaria duplicado</b> (<code>landsoficaria-1.21.1-2.3.1.1-beta.jar</code> e <code>…beta(1).jar</code>). Apaga o que tem <b>(1)</b> no nome, senão o jogo trava ao abrir.</div>
-  <nav class="toc" id="toc"></nav>
-  <div id="mods"></div>
+
+<section class="page on" id="p-inicio">
+  <h1>Bem-vindo ao guia</h1>
+  <p class="lead">Tudo o que tem no seu modpack: como chegar em cada dimensão, onde achar e como invocar cada boss, os eventos da lua e pra que serve cada mod. Toque num cartão pra abrir.</p>
+  <div class="alert">⚠️ Tem o <b>Lands of Icaria duplicado</b> na pasta <code>mods</code>. Apague o arquivo que tem <b>(1)</b> no nome, senão o jogo trava.</div>
+
+  <h2>🧭 Ferramentas que salvam a sua vida</h2>
+  <div class="grid2" id="tools"></div>
+
+  <h2>🗺️ Ordem sugerida de progressão</h2>
+  <div class="card open"><div class="cb" style="display:block;border:0" id="prog"></div></div>
+
+  <h2>⌨️ Comandos do servidor</h2>
+  <div class="card open"><div class="cb tw" style="display:block;border:0" id="cmds"></div></div>
+</section>
+
+<section class="page" id="p-dims">
+  <h1>Dimensões</h1>
+  <p class="lead">Como entrar em cada uma, com o desenho do portal em blocos. Passe o dedo ou o mouse em cima dos blocos pra ver o nome.</p>
+  <div class="count" id="c-dims"></div>
+  <div id="l-dims"></div>
+</section>
+
+<section class="page" id="p-bosses">
+  <h1>Bosses</h1>
+  <p class="lead">Onde fica cada boss, como acordar ou invocar e o que ele dropa. A dificuldade em ★ é uma estimativa.</p>
+  <div class="count" id="c-bosses"></div>
+  <div id="l-bosses"></div>
+</section>
+
+<section class="page" id="p-eventos">
+  <h1>Eventos e desafios</h1>
+  <p class="lead">Luas especiais, invasões e arenas que aparecem durante o jogo.</p>
+  <div id="l-eventos"></div>
+</section>
+
+<section class="page" id="p-mods">
+  <h1>Mods do pack</h1>
+  <p class="lead">O que cada mod faz e as dicas mais úteis, separados por categoria.</p>
+  <div class="count" id="c-mods"></div>
+  <div id="l-mods"></div>
+</section>
+
+<footer>Informações tiradas dos arquivos dos próprios mods (receitas, conquistas, textos do jogo e código) e de wikis como minecraft-guides.com, moddedmc.wiki, Modrinth e CurseForge. Os desenhos são esquemas com cores, não texturas reais. Na dúvida, confira no JEI dentro do jogo (tecla R = receita, U = uso).</footer>
 </main>
 
-<footer>
-  Informações tiradas dos próprios arquivos dos mods (receitas, textos do jogo e código) e das páginas oficiais no CurseForge.
-  Os desenhos são esquemas com cores, não texturas reais. Na dúvida, confira a receita no JEI dentro do jogo.
-</footer>
-
 <script>
-const B = {
-  '.': null,
-  O:{n:'Obsidiana',c:'#2a1f3d'},
-  G:{n:'Glowstone',c:'#e8c15a'},
-  W:{n:'Água (balde)',c:'#3d7fe0',p:1},
-  N:{n:'Portal do Aether',c:'#6fb7ff',p:1},
-  S:{n:'Bloco de Neve',c:'#eef3f7'},
-  I:{n:'Portal de Iceika',c:'#9fe3ff',p:1},
-  e:{n:'Bloco de Éden',c:'#f3d24b'},
-  w:{n:'Bloco da Floresta Selvagem',c:'#2f6fd6'},
-  a:{n:'Bloco de Apaláchia',c:'#b768e0'},
-  s:{n:'Bloco de Skythern',c:'#cfd6dc'},
-  m:{n:'Bloco de Mortum',c:'#3a3a44'},
-  X:{n:'Portal do Crepúsculo',c:'#7c5cff',p:1},
-  A:{n:'Moldura de Portal de Arcana (frente pra dentro)',c:'#7a4a2a'},
-  R:{n:'Portal de Arcana',c:'#c04cff',p:1},
-  T:{n:'Train Casing (Create)',c:'#7d6249'},
-  Y:{n:'Portal do Steamworks Realm',c:'#d9a24a',p:1},
-  P:{n:'Stellar Portal Frame',c:'#5a4b8a'},
-  H:{n:'Portal de Aerial Hell',c:'#ff9de2',p:1},
-  Q:{n:'Pilar de Quartzo (em pé)',c:'#efe9df'},
-  h:{n:'Cabeça de Pilar de Quartzo (virada pra baixo)',c:'#d8cbb3'},
-  L:{n:'Laje de Quartzo (metade de baixo)',c:'#f6f1e7'},
-  l:{n:'Laje de Quartzo (opcional no centro)',c:'#f6f1e7',o:1},
-  C:{n:'Portal de Icaria',c:'#ff8a3d',p:1},
-  n:{n:'Note Block',c:'#7a4b32'},
-  d:{n:'Deepslate Sonora (acorda com o Goat Horn)',c:'#3a4552'},
-  F:{n:'Moldura do portal da Ancient City',c:'#28303a'},
-  K:{n:'Portal do Sift',c:'#25d0c0',p:1}
+const B={
+ G:['Glowstone','#e8c15a'],N:['Portal do Aether','#6fb7ff',1],S:['Bloco de Neve','#eef3f7'],I:['Portal de Iceika','#9fe3ff',1],
+ e:['Bloco de Éden','#f3d24b'],w:['Bloco da Floresta Selvagem','#2f6fd6'],a:['Bloco de Apaláchia','#b768e0'],s:['Bloco de Skythern','#cfd6dc'],m:['Bloco de Mortum','#3a3a44'],
+ X:['Portal do Crepúsculo','#7c5cff',1],A:['Moldura de Arcana (frente pra dentro)','#7a4a2a'],R:['Portal de Arcana','#c04cff',1],
+ T:['Train Casing (Create)','#7d6249'],Y:['Portal do Steamworks','#d9a24a',1],P:['Stellar Portal Frame','#5a4b8a'],H:['Portal de Aerial Hell','#ff9de2',1],
+ Q:['Pilar de Quartzo (em pé)','#efe9df'],h:['Cabeça de Pilar de Quartzo (pra baixo)','#d8cbb3'],L:['Laje de Quartzo (metade de baixo)','#f6f1e7'],l:['Laje de Quartzo (opcional)','#f6f1e7',0,1],C:['Portal de Icaria','#ff8a3d',1],
+ n:['Note Block','#7a4b32'],d:['Deepslate Sonora','#3a4552'],F:['Moldura do portal da Ancient City','#28303a'],K:['Portal do Sift','#25d0c0',1]
 };
-
+const nether=(f,p)=>[f+f+f+f,f+p+p+f,f+p+p+f,f+p+p+f,f+f+f+f];
 function grid(rows){
-  const w = rows[0].length;
-  let h = `<div class="grid" style="grid-template-columns:repeat(${w},var(--cell))">`;
-  for(const r of rows) for(const ch of r){
-    const b = B[ch];
-    if(!b){ h += `<div class="c air"></div>`; continue; }
-    h += `<div class="c blk ${b.p?'portal':''} ${b.o?'opt':''}" style="background:${b.c}" data-t="${b.n}"></div>`;
-  }
-  return h + `</div>`;
+  let h=`<div class="g" style="grid-template-columns:repeat(${rows[0].length},var(--cell))">`;
+  for(const r of rows)for(const ch of r){const b=B[ch];
+    h+=b?`<div class="c blk ${b[2]?'pt':''} ${b[3]?'op':''}" style="background:${b[1]}" title="${b[0]}"></div>`:`<div class="c air"></div>`;}
+  const set=[...new Set(rows.join(''))].filter(c=>B[c]);
+  return h+`</div><div class="legend">${set.map(c=>`<span><i style="background:${B[c][1]}"></i>${B[c][0]}</span>`).join('')}</div>`;
 }
-function craft(cells, out){
-  let h = `<div class="craft"><div class="grid" style="grid-template-columns:repeat(3,30px)">`;
-  for(const x of cells) h += x ? `<div class="c" title="${x[1]}" style="background:${x[2]||'#8b8f99'}">${x[0]}</div>` : `<div class="c e"></div>`;
-  return h + `</div><span class="out">→</span><b>${out}</b></div>`;
+const fig=(rows,cap)=>`<figure>${grid(rows)}<figcaption>${cap}</figcaption></figure>`;
+function craft(cells,out,cap){
+  const names={};
+  let h=`<figure><div class="craft"><div class="g">`;
+  for(const x of cells){ if(x){names[x[0]]=x[1]; h+=`<div class="s" style="background:${x[2]}" title="${x[1]}">${x[0]}</div>`;} else h+=`<div class="s"></div>`; }
+  h+=`</div><span class="out">→</span><b>${out}</b></div><div class="ingr">${Object.entries(names).map(([k,v])=>`<b>${k}</b> = ${v}`).join(' · ')}</div>`;
+  return h+(cap?`<figcaption>${cap}</figcaption>`:'')+`</figure>`;
 }
-function legendOf(rows){
-  const set = [...new Set(rows.join(''))].filter(ch=>B[ch]);
-  return `<div class="legend">${set.map(ch=>`<span><i style="background:${B[ch].c}"></i>${B[ch].n}</span>`).join('')}</div>`;
-}
-function fig(rows, cap){ return `<figure>${grid(rows)}${legendOf(rows)}<figcaption>${cap}</figcaption></figure>`; }
+const _=null;
+const OB=['Ob','Obsidiana','#4a3a6b'],EP=['Pé','Pérola do Ender','#2bb3a0'],EE=['Ol','Olho do Ender','#3fa36b'];
 
-const netherShape = (f,p)=>[f+f+f+f, f+p+p+f, f+p+p+f, f+p+p+f, f+f+f+f];
-
-const MODS = [
-{
-  id:'aether', nome:'The Aether + Deep Aether', cor:'#6fb7ff', tipo:'portal',
-  dims:[{
-    nome:'Aether (o paraíso nas nuvens)',
-    como:['Monte uma moldura de <b>Glowstone</b> no formato do portal do Nether (4 de largura × 5 de altura).','Despeje um <b>balde de água</b> dentro da moldura.','Pronto, o portal acende e leva pro Aether.'],
-    figs:[fig(netherShape('G','N'),'Moldura de Glowstone. Use o balde de água por dentro pra acender.')],
-    bosses:[['Slider','Dungeon de Bronze'],['Rainha Valquíria','Dungeon de Prata'],['Sun Spirit','Dungeon de Ouro'],['Eye of the Storm','Brass Dungeon (Deep Aether)']],
-    obs:'Cada dungeon tem uma chave própria que o boss dropa, e ela abre o baú do tesouro.'
-  }]
-},
-{
-  id:'divine', nome:'DivineRPG', cor:'#c04cff', tipo:'portal',
-  dims:[
-  {
-    nome:'Iceika (gelo)',
-    como:['Monte uma moldura de <b>Blocos de Neve</b> no formato de portal do Nether (mínimo 10 blocos, os cantos são opcionais).','Jogue uma <b>Pedra Gélida</b> no fogo pra criar a <b>Chama Gélida</b>.','Clique com o <b>Globo de Neve</b> no fundo do portal. Só funciona no Overworld ou em Iceika.'],
-    figs:[fig(netherShape('S','I'),'Moldura de Blocos de Neve.'),
-          `<figure>${craft([null,['V','Vidro','#cfe8ee'],null,['V','Vidro','#cfe8ee'],['N','Bloco de Neve','#eef3f7'],['V','Vidro','#cfe8ee'],['D','Diamante','#5ee0d6'],['S','Pedra das Sombras','#4a4a6a'],['D','Diamante','#5ee0d6']],'Globo de Neve')}<figcaption>Receita do Globo de Neve: vidro, bloco de neve, 2 diamantes e Pedra das Sombras.</figcaption></figure>`],
-    bosses:[], obs:'Coloque um <b>relógio comum</b> na Chama Gélida pra ganhar o <b>Relógio Congelado</b>, que é necessário pros portais do Crepúsculo.'
-  },
-  {
-    nome:'Dimensões do Crepúsculo (Éden → Floresta Selvagem → Apaláchia → Skythern → Mortum)',
-    como:['<b>Primeira entrada (fenda):</b> jogue o item no fogo certo e clique na chama com o <b>Relógio Congelado</b> ajustado no horário indicado na tabela abaixo.','<b>Depois, portal fixo:</b> dentro da dimensão, monte uma moldura no formato do Nether com os <b>blocos daquela dimensão</b> e ative com o mesmo relógio, no mesmo horário.','Os cantos da moldura não são obrigatórios.'],
-    figs:[fig(netherShape('e','X'),'Éden: Blocos de Éden'),fig(netherShape('w','X'),'Floresta Selvagem: Blocos da Floresta'),fig(netherShape('a','X'),'Apaláchia: Blocos de Apaláchia'),fig(netherShape('s','X'),'Skythern: Blocos de Skythern'),fig(netherShape('m','X'),'Mortum: Blocos de Mortum')],
-    tabela:[['Éden','Pedra Divina no fogo comum','Meio-dia'],['Floresta Selvagem','Coração de Éden na Chama Divina','Começo da tarde'],['Apaláchia','Coração da Floresta na Chama Selvagem','Fim da tarde'],['Skythern','Coração de Apaláchia na Chama Encantada','Pôr do sol'],['Mortum','Coração de Skythern no Fogo Celeste','Meia-noite']],
-    bosses:[['Tempestade Solar','Éden'],['Termasect','Floresta Selvagem'],['Arqueiro Eterno','Apaláchia'],['Cori Experiente','Skythern'],['Densos e Reyvor','invocados com item'],['Soul Fiend','invocado'],['Twilight Demon','invocado'],['Vamacheron','invocado'],['Karot','invocado']],
-    obs:'Cada boss dropa o coração que abre a próxima dimensão. As dungeons dos bosses precisam de um <b>chunk</b> da própria dimensão pra serem ativadas.'
-  },
-  {
-    nome:'Arcana (dungeon mágica)',
-    como:['Crafte <b>12 Molduras de Portal de Arcana</b>.','Monte no formato do portal do End: um anel 5×5 sem os cantos.','A <b>frente de cada bloco tem que apontar pra dentro</b>. Ao ativar, o portal destrói o que estiver no 3×3 do meio.'],
-    figs:[fig(['.AAA.','ARRRA','ARRRA','ARRRA','.AAA.'],'Visto de cima: 12 molduras viradas pra dentro.'),
-          `<figure>${craft([null,['F','Pedra de Fogo das Almas','#d2552d'],null,['I','Bloco de Ferro','#d9d9d9'],['I','Bloco de Ferro','#d9d9d9'],['I','Bloco de Ferro','#d9d9d9'],null,['F','Pedra de Fogo das Almas','#d2552d'],null],'Moldura de Arcana')}<figcaption>A Pedra de Fogo das Almas cai do Rei dos Incendiários.</figcaption></figure>`],
-    bosses:[['Dramix','Livro do Mago no Altar do Dramix'],['Parasecta','Livro do Mago no Altar da Parasecta']]
-  },
-  {
-    nome:'Vethea (o mundo dos sonhos)',
-    como:['Crafte a <b>Cama do Pesadelo</b>.','Coloque num <b>lugar totalmente escuro</b> no Overworld e durma com o <b>inventário vazio</b>.','Lá dentro você recebe outro inventário. O seu volta quando você sai.'],
-    figs:[`<figure>${craft([['C','Coração de Mortum','#b23b3b'],['C','Coração de Mortum','#b23b3b'],['C','Coração de Mortum','#b23b3b'],['M','Bloco de Mortum','#3a3a44'],['M','Bloco de Mortum','#3a3a44'],['M','Bloco de Mortum','#3a3a44'],null,null,null],'Cama do Pesadelo')}<figcaption>3 Corações de Mortum em cima e 3 Blocos de Mortum embaixo.</figcaption></figure>`],
-    bosses:[['Quadro','Altar Quadrotic + Sílex de Sonho'],['Dr. Karos','Altar de Karos + Sílex de Sonho'],['Lady Luna','Altar Lunic + Relógio Lunar'],['Raglok','Altar de Raglok + Sílex de Sonho'],['Rainha da Colmeia','Vethea']]
-  },
-  {
-    nome:'Bosses do DivineRPG no Overworld, Nether e End',
-    como:['Não precisam de portal. São invocados com itens.'],
-    figs:[],
-    bosses:[['O Vigilante','Chamado do Vigilante no Nether'],['Rei dos Incendiários','Chama Infernal'],['Horda de Ayeracos','Chifre da Horda no End']]
-  }]
-},
-{
-  id:'cataclysm', nome:'Cataclysm Dimensions', cor:'#ff6b3d', tipo:'item',
-  dims:[{
-    nome:'8 arenas, uma por boss do Cataclysm',
-    como:['Pegue o <b>olho</b> do Cataclysm que corresponde ao boss (veja a tabela abaixo).','Segure <b>Shift</b> e clique com o botão direito usando o olho. O mod prepara a arena e te teleporta.','Depois de matar o boss, aparece uma <b>Fenda de Retorno</b> onde ele caiu. Clique nela pra voltar.'],
-    figs:[],
-    tabela:[['Inferno’s Maw','Olho de Fogo (Flame Eye)','Ignis'],['Soulforge Anvil','Olho Monstruoso (Monstrous Eye)','Netherite Monstrosity'],['Bastion of the Lost','Olho do Vazio (Void Eye)','Ender Guardian'],['Abyssal Depths','Olho do Abismo (Abyss Eye)','Leviathan'],['Pharaoh’s Bane','Olho do Deserto (Desert Eye)','Ancient Remnant'],['Forge of Aeons','Olho Mecânico (Mech Eye)','The Harbinger'],['Eternal Frosthold','Olho Amaldiçoado (Cursed Eye)','Maledictus'],['Sanctum Fallen','Olho da Tempestade (Storm Eye)','Scylla']],
-    tabHead:['Arena','Olho usado','Boss'],
-    bosses:[['Ignis'],['Netherite Monstrosity'],['Ender Guardian'],['Leviathan'],['Ancient Remnant'],['The Harbinger'],['Maledictus'],['Scylla']],
-    obs:'A ligação entre olho e arena foi deduzida pelo nome de cada arena. Se algum não funcionar, confira no JEI. O olho é gasto ao teleportar (dá pra mudar isso na config). Camas explodem nas arenas.'
-  }]
-},
-{
-  id:'aerial', nome:'Aerial Hell', cor:'#ff9de2', tipo:'portal',
-  dims:[{
-    nome:'Aerial Hell (ilhas flutuantes)',
-    como:['Minere <b>Stellar Debris</b> (minério) e cozinhe na fornalha pra virar <b>Stellar Portal Bricks</b>.','Crafte <b>Stellar Portal Frame</b> com 4 tijolos em quadrado.','Monte a moldura no formato do portal do Nether.','Acenda com o <b>Stellar Lighter</b>, clicando na parte de baixo, por dentro do portal.'],
-    figs:[fig(netherShape('P','H'),'Moldura de Stellar Portal Frame (formato do Nether).'),
-          `<figure>${craft([['F','Fluorita','#8fe3c8'],['R','Rubi','#e0405a'],null,null,null,null,null,null,null],'Stellar Lighter')}<figcaption>Sem formato fixo: Fluorita + Rubi. Com mais um livro vira o Guia de Aerial Hell.</figcaption></figure>`],
-    bosses:[['Mud Cycle Mage','Mud Dungeon'],['Lunar Priest','Lunatic Temple'],['Chained God','Golden Nether Prison'],['Lilith','Shadow Catacombs']],
-    obs:'Também existem portais abandonados no Overworld, onde dá pra achar o Guia.'
-  }]
-},
-{
-  id:'icaria', nome:'Lands of Icaria', cor:'#ff8a3d', tipo:'portal',
-  dims:[{
-    nome:'Icaria (Grécia e Egito antigos)',
-    como:['No <b>Nether</b>, mate um <b>Revenant Pyromancer</b> pra pegar uma <b>Granada de Fogo Grego</b>.','Junte cerca de 1 pack de quartzo: <b>6 Pilares de Quartzo</b>, <b>2 Cabeças de Pilar de Quartzo</b> e <b>6 Lajes de Quartzo</b>.','Monte a moldura como no esquema e <b>arremesse a granada dentro</b> pra acender.'],
-    figs:[fig(['LLllLL','.h..h.','.QCCQ.','.QCCQ.','.QCCQ.'],'Esquema montado a partir do código do mod. Os pilares ficam em pé e as cabeças viradas pra baixo. O meio de cima e o chão podem ficar vazios.')],
-    bosses:[['Capitão Revenant','vilas danificadas'],['Arachne','vilas em ruínas'],['Vinegaroon','mini-boss'],['Escorpião','mini-boss'],['Solifugae','mini-boss']],
-    obs:'A mineração vai por profundidade: cada camada de pedra pede uma picareta melhor (Chert → Chalkos → Orichalcum → Vanadiumsteel → Sideros).'
-  }]
-},
-{
-  id:'sift', nome:"Mielon's The Sift", cor:'#25d0c0', tipo:'item',
-  dims:[{
-    nome:'The Sift (Ichor e sculk)',
-    como:['Vá até o centro de uma <b>Ancient City</b> e toque um <b>Goat Horn</b>.','Aparece um <b>Singer</b>, que acorda <b>8 Deepslates Sonoras</b> na frente da moldura do portal.','Coloque um <b>Note Block</b> em cima de cada uma. Clique com o direito pra afinar (cada um tem 8 notas).','Toque com o clique esquerdo na ordem <b>0 → 2 → 6 → 5 → 4 → 1 → 3 → 7</b>. Se a melodia estiver certa, o portal abre.'],
-    figs:[fig(['FFFFFFFFF','FKKKKKKKF','FKKKKKKKF','nnnnnnnn.','dddddddd.'],'Esquema simplificado: 8 note blocks em cima das deepslates sonoras, na frente da moldura da Ancient City.')],
-    bosses:[['Monarch','Sculkers’ Lair: coloque a Sculkflower em cima de Royal Sculk']],
-    obs:'O Ichor tira vida. Encante o peitoral com <b>Soul Absorption</b> pra ficar protegido. O Siftite melhora equipamentos de Netherite.'
-  }]
-},
-{
-  id:'moria', nome:'Moria Depths', cor:'#5d8dd6', tipo:'found',
-  dims:[{
-    nome:'Moria (reino anão subterrâneo)',
-    como:['Procure um <b>portão antigo nas cavernas</b> do Overworld. Ele tem moldura entalhada, lanternas azuis e a abertura brilhando.','O portão <b>já vem ativo</b>, é só entrar. <b>Não tem receita.</b>','O portão de volta te leva pra caverna de onde você veio.'],
-    figs:[],
-    bosses:[['Fallen King','salas do trono'],['Basalisk','serpente de pedra nas cavernas'],['Anões Revenant','salões abandonados']],
-    obs:'Num mundo que já existe, um admin pode usar <code>/moria retrofit</code> pra procurar lugares pros portões. Tem integração com Waystones.'
-  }]
-},
-{
-  id:'asterion', nome:'Asterion', cor:'#c9a227', tipo:'found',
-  dims:[{
-    nome:'O Labirinto',
-    como:['Ache uma <b>Ruína Subaquática</b> (é comum) e pegue a <b>Antikythera Blueprint</b>.','Crafte o <b>Antikythera Mechanism</b>, que funciona como uma bússola. A receita está no JEI.','Siga a bússola até a estrutura do portal (<b>só existe uma por mundo</b>) e pule no portal do poço central.'],
-    figs:[],
-    bosses:[['Minotauro','fundo do Labirinto'],['Rainha Besouro','seção cheia de vegetação']],
-    obs:'Lá dentro tem casas seguras (Safehouses) e uma forja própria pra fazer o Bonesteel.'
-  }]
-},
-{
-  id:'seroka', nome:'Seroka: Mar de Karman', cor:'#9ad1ff', tipo:'found',
-  dims:[{
-    nome:'Mar de Karman (oceano acima do céu)',
-    como:['Procure uma estrutura de <b>Gêiser</b> nos <b>oceanos</b> do Overworld (oceano normal, profundo, morno ou frio).','O <b>Coração de Gêiser</b> te lança acima do mundo, direto pro Mar de Karman.','Lá você anda sobre nuvem sólida e navega de barco na nuvem líquida.'],
-    figs:[`<figure>${craft([['P','Pérola do Ender','#2bb3a0'],['B','Vara de Brisa','#b9c7d6'],null,null,null,null,null,null,null],'Olho do Dragão')}<figcaption>Sem formato fixo. Arremesse o olho pro céu pra invocar o Dragão das Nuvens.</figcaption></figure>`],
-    bosses:[['Dragão das Nuvens','arremesse o Olho do Dragão pro céu']],
-    obs:'Só existe um dragão no mar e ele não renasce sozinho. A única Terra das Nuvens esconde um <b>portal do End apagado</b> numa sala selada embaixo da pedra.'
-  }]
-},
-{
-  id:'create', nome:'Create: Steamworks Realm', cor:'#d9a24a', tipo:'portal',
-  dims:[{
-    nome:'Steamworks Realm (dimensão de mineração)',
-    como:['Monte uma moldura de <b>Train Casing</b> com abertura 2×3 (formato do portal do Nether).','Crafte o <b>Steamworks Realm Portal Igniter</b>.','Clique com ele na moldura.','Dica: <b>trens passam pelo portal</b>. É só colocar trilho na frente.'],
-    figs:[fig(netherShape('T','Y'),'Moldura de Train Casing.'),
-          `<figure>${craft([['A','Andesite Alloy','#9aa29a'],['F','Sílex','#555'],null,null,null,null,null,null,null],'Portal Igniter')}<figcaption>Sem formato fixo: Andesite Alloy + Sílex.</figcaption></figure>`],
-    bosses:[], obs:'Não tem boss. É uma dimensão pra minerar e automatizar com Create.'
-  }]
-},
-{
-  id:'javd', nome:'Just Another Void Dimension', cor:'#9b8cff', tipo:'item',
-  dims:[{
-    nome:'Void (mundo vazio com plataforma)',
-    como:['Crafte o <b>Portal Block</b>.','Coloque no chão e clique nele com uma <b>Pérola do Ender</b> pra ativar.','Clique de novo pra ir. Você aparece numa plataforma no meio do nada.'],
-    figs:[`<figure>${craft([['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d'],['E','Pérola do Ender','#2bb3a0'],['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d'],['O','Obsidiana','#2a1f3d']],'Portal Block')}<figcaption>8 Obsidianas em volta de 1 Pérola do Ender.</figcaption></figure>`],
-    bosses:[], obs:'Bom pra skyblock, fazendas ou construir em paz.'
-  }]
-}
+const TOOLS=[
+ ['🧭','Explorer\'s Compass','Acha qualquer estrutura: as dungeons de boss, templos, fortalezas e vilas. Escolha a estrutura na lista e siga a agulha. É o jeito mais fácil de achar os bosses deste guia.'],
+ ['📖','JEI','Aperte <b>R</b> em cima de um item pra ver a receita e <b>U</b> pra ver onde ele é usado. Serve pra confirmar qualquer coisa deste guia.'],
+ ['🗺️','JourneyMap','Minimapa e mapa completo (tecla <b>J</b>). Marque waypoints nas dungeons e portais que você achar.'],
+ ['🪦','Corpse','Quando você morre, seus itens ficam num <b>cadáver</b> no lugar da morte, em vez de espalhados no chão. Volte lá e abra o cadáver.'],
+ ['🗿','Waystones','Pedras de teleporte que aparecem nas vilas. Ative clicando e depois viaje entre elas. O Moria Depths também coloca waystones nas vilas anãs.'],
+ ['🎒','Sophisticated Backpacks','Mochilas com upgrades (coletar itens, filtro, fornalha, etc.). Essencial pra explorar dungeon longe de casa.']
 ];
 
-const tipoNome = {portal:'Portal construído', item:'Item / ritual', found:'Achar no mundo'};
-const root = document.getElementById('mods'), toc = document.getElementById('toc');
-function tabela(rows, head){
-  head = head || ['Destino','Como abrir a fenda','Horário do relógio'];
-  return `<table style="border-collapse:collapse;margin:8px 0;font-size:13.5px;width:100%;max-width:640px">
-  <tr>${head.map(x=>`<th style="text-align:left;border-bottom:1px solid var(--line);padding:6px 8px;color:var(--mut)">${x}</th>`).join('')}</tr>
-  ${rows.map(r=>`<tr>${r.map(x=>`<td style="border-bottom:1px solid var(--line);padding:6px 8px">${x}</td>`).join('')}</tr>`).join('')}</table>`;
-}
-for(const m of MODS){
-  toc.insertAdjacentHTML('beforeend', `<a href="#${m.id}">${m.nome}</a>`);
-  const dims = m.dims.map(d=>`
-    <div class="dim">
-      <h3>${d.nome}</h3>
-      <div class="row">
-        <div class="info">
-          <div class="lbl">Como acessar</div>
-          <ol class="steps">${d.como.map(s=>`<li>${s}</li>`).join('')}</ol>
-          ${d.tabela?tabela(d.tabela,d.tabHead):''}
-          <div class="lbl">Bosses</div>
-          ${d.bosses.length?`<div class="bosses">${d.bosses.map(b=>`<span class="boss">${b[0]}${b[1]?` <small>· ${b[1]}</small>`:''}</span>`).join('')}</div>`:`<span class="none">Nenhum boss.</span>`}
-          ${d.obs?`<p class="note">💡 ${d.obs}</p>`:''}
-        </div>
-        ${d.figs.length?`<div class="figs">${d.figs.join('')}</div>`:''}
-      </div>
-    </div>`).join('');
-  root.insertAdjacentHTML('beforeend', `
-    <section class="mod" id="${m.id}" data-tipo="${m.tipo}">
-      <div class="hd"><span class="dot" style="background:${m.cor};color:${m.cor}"></span>
-        <h2>${m.nome}</h2><span class="tag">${tipoNome[m.tipo]}</span><span class="arrow">▾</span></div>
-      <div class="bd">${dims}</div>
-    </section>`);
-}
+const PROG=[
+ ['Começo','Monte base, faça ferramentas de ferro e escolha sua origem (Origins). Use o Explorer\'s Compass pra marcar estruturas perto. Comece Create e Mystical Agriculture pra ter recursos.'],
+ ['Primeiros bosses','Bosses mais leves do Overworld: Skor (Yeti), Sirok (Verme das Areias), Colosso do Musgo, Golem Gélido, Esqueletossauro. No Cataclysm, comece pelo Maledictus ou pelo Ancient Remnant.'],
+ ['Aether','Glowstone + balde de água. Pegue as dungeons de Bronze → Prata → Ouro e o Eye of the Storm do Deep Aether.'],
+ ['Nether forte','Netherite, Rei dos Incendiários e Vigilante (DivineRPG), Devora-Lava, Helvar, Abominação Decomposta. Pegue o Revenant Pyromancer pra abrir Icaria.'],
+ ['Dimensões do meio','Iceika e Crepúsculo (Éden → Mortum) do DivineRPG, Icaria, Aerial Hell, The Sift, Moria, Labirinto (Asterion) e Mar de Karman.'],
+ ['End','Mate o Dragão. Depois: Ender Guardian (Cataclysm), Sentinela do Coro, Shulker Mímico e o Obliterador (Monstros Lendários), mais a Horda de Ayeracos.'],
+ ['Endgame','Ignis, Leviatã, Scylla e Monstruosidade de Netherita (Cataclysm), Arcana e Vethea (DivineRPG), Arena Celestial em dificuldade alta.']
+];
 
-document.querySelectorAll('.mod>.hd').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('closed'));
-const tg = document.getElementById('toggle');
-tg.onclick=()=>{
-  const fechar = tg.textContent.startsWith('Recolher');
-  document.querySelectorAll('.mod').forEach(m=>m.classList.toggle('closed',fechar));
-  tg.textContent = fechar ? 'Expandir tudo' : 'Recolher tudo';
+const CMDS=[
+ ['/sethome &lt;nome&gt;','Salva uma casa (Easy Homes)'],['/home &lt;nome&gt;','Teleporta pra casa salva'],['/delhome &lt;nome&gt;','Apaga uma casa'],
+ ['/tpa &lt;jogador&gt;','Pede pra teleportar até alguém (TPA)'],['/tpaccept','Aceita o pedido de teleporte'],['/tpdeny','Recusa o pedido'],
+ ['/moria retrofit','(admin) Procura lugares pros portões do Moria num mundo já existente']
+];
+
+const DIMS=[
+{t:'Aether',mod:'The Aether + Deep Aether',ic:'☁️',tipo:'portal',tag:'dim',
+ resumo:'Ilhas no céu com 3 dungeons clássicas e mais uma do Deep Aether.',
+ como:['Monte uma moldura de <b>Glowstone</b> no formato do portal do Nether (4 de largura × 5 de altura).','Despeje um <b>balde de água</b> dentro.','O portal acende. Pra voltar, use o mesmo portal.'],
+ figs:[fig(nether('G','N'),'Moldura de Glowstone, aceso com balde de água.')],
+ extra:'<b>Recursos:</b> ferramentas de Skyroot dobram drops de Holystone e Ambrósia. Zanite é minerada com picareta de Holystone. Gravitite precisa ser encantada no <b>Enchanter</b> (altar). A Incubadora choca ovos de Moa (montaria voadora) usando Tochas de Ambrósia.',
+ bosses:[['Slider','Dungeon de Bronze'],['Rainha Valquíria','Dungeon de Prata'],['Sun Spirit','Dungeon de Ouro'],['Eye of the Storm','Brass Dungeon']]},
+{t:'Iceika',mod:'DivineRPG',ic:'❄️',tipo:'portal',tag:'dim',
+ resumo:'Dimensão de gelo. É de onde vem o Relógio Congelado, a chave pras dimensões do Crepúsculo.',
+ como:['Faça a moldura com <b>Blocos de Neve</b> no formato de portal do Nether (os cantos são opcionais).','Jogue uma <b>Pedra Gélida</b> no fogo pra virar <b>Chama Gélida</b>.','Clique com o <b>Globo de Neve</b> no fundo do portal. Só funciona no Overworld ou em Iceika.'],
+ figs:[fig(nether('S','I'),'Moldura de Blocos de Neve.'),craft([_,['Vi','Vidro','#cfe8ee'],_,['Vi','Vidro','#cfe8ee'],['Ne','Bloco de Neve','#eef3f7'],['Vi','Vidro','#cfe8ee'],['Di','Diamante','#5ee0d6'],['So','Pedra das Sombras','#7a7aa6'],['Di','Diamante','#5ee0d6']],'Globo de Neve')],
+ extra:'Jogue um <b>relógio comum</b> na Chama Gélida pra ganhar o <b>Relógio Congelado</b>.',bosses:[]},
+{t:'Crepúsculo: Éden → Mortum',mod:'DivineRPG',ic:'🌆',tipo:'portal',tag:'dim',
+ resumo:'5 dimensões em sequência. O boss de cada uma dropa a chave da próxima.',
+ como:['<b>Primeira entrada (fenda):</b> jogue o item no fogo certo e clique na chama com o <b>Relógio Congelado</b> ajustado no horário da tabela.','<b>Portal fixo:</b> dentro da dimensão, monte uma moldura no formato do Nether com os blocos dela e ative com o mesmo relógio, no mesmo horário.','Esses portais só ativam no Overworld ou na própria dimensão.'],
+ tabela:{h:['Destino','Abrir a fenda','Horário'],r:[['Éden','Pedra Divina no fogo comum','Meio-dia'],['Floresta Selvagem','Coração de Éden na Chama Divina','Começo da tarde'],['Apaláchia','Coração da Floresta na Chama Selvagem','Fim da tarde'],['Skythern','Coração de Apaláchia na Chama Encantada','Pôr do sol'],['Mortum','Coração de Skythern no Fogo Celeste','Meia-noite']]},
+ figs:[fig(nether('e','X'),'Éden'),fig(nether('w','X'),'Floresta Selvagem'),fig(nether('a','X'),'Apaláchia'),fig(nether('s','X'),'Skythern'),fig(nether('m','X'),'Mortum')],
+ extra:'As dungeons dos bosses precisam de um <b>chunk</b> (fragmento) da própria dimensão pra serem ativadas. Almas e fragmentos caem dos mobs de cada dimensão.',
+ bosses:[['Tempestade Solar','Éden'],['Termasect','Floresta Selvagem'],['Arqueiro Eterno','Apaláchia'],['Cori Experiente','Skythern'],['Densos, Reyvor, Soul Fiend, Twilight Demon, Vamacheron, Karot','invocados com itens']]},
+{t:'Arcana',mod:'DivineRPG',ic:'🔮',tipo:'portal',tag:'dim',
+ resumo:'Dungeon mágica subterrânea, com altares de boss.',
+ como:['Crafte <b>12 Molduras de Portal de Arcana</b>.','Monte no formato do portal do End: anel 5×5 sem os cantos.','A <b>frente de cada bloco aponta pra dentro</b>. Ao ativar, o portal destrói o que estiver no 3×3 do meio.'],
+ figs:[fig(['.AAA.','ARRRA','ARRRA','ARRRA','.AAA.'],'Visto de cima.'),craft([_,['Fo','Pedra de Fogo das Almas','#d2552d'],_,['Fe','Bloco de Ferro','#d9d9d9'],['Fe','Bloco de Ferro','#d9d9d9'],['Fe','Bloco de Ferro','#d9d9d9'],_,['Fo','Pedra de Fogo das Almas','#d2552d'],_],'Moldura de Arcana','A Pedra de Fogo das Almas cai do Rei dos Incendiários.')],
+ bosses:[['Dramix','Livro do Mago no altar'],['Parasecta','Livro do Mago no altar']]},
+{t:'Vethea',mod:'DivineRPG',ic:'💤',tipo:'item',tag:'dim',
+ resumo:'O mundo dos sonhos, com inventário separado e altares de boss.',
+ como:['Crafte a <b>Cama do Pesadelo</b>.','Coloque num <b>lugar totalmente escuro</b> no Overworld.','Durma com o <b>inventário vazio</b>. Lá dentro você ganha outro inventário, e o seu volta quando você sai.'],
+ figs:[craft([['Co','Coração de Mortum','#b23b3b'],['Co','Coração de Mortum','#b23b3b'],['Co','Coração de Mortum','#b23b3b'],['Mo','Bloco de Mortum','#55556a'],['Mo','Bloco de Mortum','#55556a'],['Mo','Bloco de Mortum','#55556a'],_,_,_],'Cama do Pesadelo')],
+ bosses:[['Quadro','Altar Quadrotic + Sílex de Sonho'],['Dr. Karos','Altar de Karos + Sílex de Sonho'],['Lady Luna','Altar Lunic + Relógio Lunar'],['Raglok','Altar de Raglok + Sílex de Sonho'],['Rainha da Colmeia','Vethea']]},
+{t:'Aerial Hell',mod:'Aerial Hell',ic:'🌸',tipo:'portal',tag:'dim',
+ resumo:'Ilhas flutuantes com 4 dungeons de boss e um bioma de Sombras.',
+ como:['Minere <b>Stellar Debris</b> e cozinhe na fornalha pra virar <b>Stellar Portal Bricks</b>.','4 tijolos em quadrado = 1 <b>Stellar Portal Frame</b>.','Monte a moldura no formato do Nether e acenda com o <b>Stellar Lighter</b>, clicando na parte de baixo por dentro.'],
+ figs:[fig(nether('P','H'),'Moldura de Stellar Portal Frame.'),craft([['Fl','Fluorita','#8fe3c8'],['Ru','Rubi','#e0405a'],_,_,_,_,_,_,_],'Stellar Lighter','Sem formato fixo. Com um livro a mais vira o Guia de Aerial Hell.')],
+ extra:'Tem portais abandonados no Overworld com o Guia nos baús. Nas dungeons de Sombra, os Reatores de Luz combatem as Sombras.',
+ bosses:[['Mud Cycle Mage','Mud Dungeon'],['Lunar Priest','Lunatic Temple'],['Chained God','Golden Nether Prison'],['Lilith','Shadow Catacombs']]},
+{t:'Icaria',mod:'Lands of Icaria',ic:'🏛️',tipo:'portal',tag:'dim',
+ resumo:'Grécia e Egito antigos, em camadas. Cada camada pede uma picareta melhor.',
+ como:['No <b>Nether</b>, mate um <b>Revenant Pyromancer</b> pra pegar uma <b>Granada de Fogo Grego</b>.','Faça com quartzo: <b>6 Pilares</b>, <b>2 Cabeças de Pilar</b> e <b>6 Lajes</b>.','Monte como no desenho e <b>arremesse a granada dentro</b>.'],
+ figs:[fig(['LLllLL','.h..h.','.QCCQ.','.QCCQ.','.QCCQ.'],'Montado a partir do código do mod. O meio de cima e o chão podem ficar vazios.')],
+ extra:'<b>Picaretas por camada:</b> Yellowstone (Chert) → Silkstone (Chalkos) → Sunstone (Orichalcum) → Voidshale (Vanadiumsteel) → Baetyl (Sideros). As receitas da Chaleira (poções de ervas) aparecem em pergaminhos dentro dos vasos.',
+ bosses:[['Capitão Revenant','vilas danificadas'],['Arachne','vilas em ruínas'],['Vinegaroon, Escorpião, Solifugae','mini-bosses']]},
+{t:'The Sift',mod:"Mielon's The Sift",ic:'🎵',tipo:'item',tag:'dim',
+ resumo:'Dimensão de Icor e sculk, que se abre com uma melodia na Ancient City.',
+ como:['Toque um <b>Goat Horn</b> no centro de uma <b>Ancient City</b>.','Aparece o <b>Ressonante (Singer)</b>, que acorda <b>8 Deepslates Sonoras</b> na frente da moldura.','Coloque um <b>Note Block</b> em cima de cada uma. Clique direito pra afinar (8 notas cada).','Toque com clique esquerdo na ordem <b>0 → 2 → 6 → 5 → 4 → 1 → 3 → 7</b>. Com a melodia certa, o portal abre.'],
+ figs:[fig(['FFFFFFFFF','FKKKKKKKF','FKKKKKKKF','nnnnnnnn.','dddddddd.'],'Esquema simplificado.')],
+ extra:'O <b>Icor</b> tira vida: encante o peitoral com <b>Soul Absorption</b> (I protege, II regenera). As <b>Fendas do Sift</b> ficam abertas 5 minutos e ligam o Sift ao Overworld. Siftite melhora Netherite, e se você morrer, uma Mini-Fenda devolve o equipamento de Siftite. Dá pra construir um <b>Golem Ecoante</b> com Soulshale Polido e Abóbora Esculpida.',
+ bosses:[['Monarch','Sculkers\' Lair']]},
+{t:'Moria',mod:'Moria Depths',ic:'⛏️',tipo:'found',tag:'dim',
+ resumo:'Reino anão subterrâneo com 8 biomas, vilas habitadas e salas do trono.',
+ como:['Procure um <b>portão antigo nas cavernas</b> do Overworld: moldura entalhada, lanternas azuis e abertura brilhando.','O portão <b>já vem ativo</b>, é só entrar. <b>Não tem receita.</b>','O portão de volta te leva pra caverna de onde você veio. Outros portões lá dentro ligam a outros lugares.'],
+ extra:'Siga veios de minério expostos pra achar depósitos grandes. Os <b>diários de expedição</b> perto das entradas apontam pra outras estruturas. As vilas anãs têm aldeões, oficinas e golems de ferro.',
+ bosses:[['Fallen King','salas do trono'],['Basalisk','cavernas'],['Anões Revenant','salões abandonados']]},
+{t:'O Labirinto',mod:'Asterion',ic:'🐂',tipo:'found',tag:'dim',
+ resumo:'Labirinto gigante embaixo do oceano, com o Minotauro e uma Rainha Besouro que dá missões.',
+ como:['Ache uma <b>Ruína Subaquática</b> e pegue a <b>Antikythera Blueprint</b>.','Crafte o <b>Antikythera Mechanism</b> (veja no JEI), que funciona como bússola.','Siga até a estrutura do portal (<b>só existe uma por mundo</b>) e pule no portal do poço central.'],
+ extra:'Lá dentro: <b>Safehouses</b> pra descansar, a Rainha Besouro com <b>21 pedidos</b> (dá recompensas), forja de Bonesteel e metais celestiais (Bronze, Ouro e Aço Celestial). A <b>Chave do Braseiro Amaldiçoado</b> libera a luta contra o Braseiro. Dá pra montar uma Centopeia Escarlate.',
+ bosses:[['Minotauro','fundo do labirinto'],['Braseiro Amaldiçoado','precisa da chave']]},
+{t:'Mar de Karman',mod:'Seroka Karman',ic:'🌊',tipo:'found',tag:'dim',
+ resumo:'Um oceano de nuvens acima do céu, com ilhas, vilas e um único dragão.',
+ como:['Ache uma estrutura de <b>Gêiser</b> nos <b>oceanos</b> do Overworld.','O <b>Coração de Gêiser</b> te lança direto pro Mar de Karman.','Você anda sobre nuvem sólida e navega de barco na nuvem líquida.'],
+ figs:[craft([EP,['Vb','Vara de Brisa','#b9c7d6'],_,_,_,_,_,_,_],'Olho do Dragão','Sem formato fixo. Arremesse pro céu pra invocar o Dragão das Nuvens.')],
+ extra:'<b>Progressão:</b> tábuas de nuvem → ferramentas de concha → escama de Alcião → <b>Madrepérola</b>, que bate mais que Netherite (24 pontos de armadura no traje completo). A moeda das vilas são os <b>corantes</b>. Poção de Condensado = andar na nuvem líquida. Seis níveis de lã numa bigorna isolam a armadura contra raios.',
+ bosses:[['Dragão das Nuvens','Olho do Dragão arremessado pro céu']]},
+{t:'Arenas do Cataclysm',mod:'Cataclysm Dimensions',ic:'🔥',tipo:'item',tag:'dim',
+ resumo:'Cada boss do Cataclysm em uma arena própria. Não precisa procurar estrutura.',
+ como:['Crafte o <b>olho</b> do boss (receitas na aba Bosses).','Segure <b>Shift</b> e clique direito com o olho. O mod prepara a arena e te teleporta.','Depois de matar o boss, clique na <b>Fenda de Retorno</b> pra voltar.'],
+ tabela:{h:['Arena','Olho','Boss'],r:[['Inferno\'s Maw','Olho de Fogo','Ignis'],['Soulforge Anvil','Olho Monstruoso','Monstruosidade de Netherita'],['Bastion of the Lost','Olho do Vazio','Ender Guardian'],['Abyssal Depths','Olho do Abismo','Leviatã'],['Pharaoh\'s Bane','Olho do Deserto','Ancient Remnant'],['Forge of Aeons','Olho Mecânico','Harbinger'],['Eternal Frosthold','Olho Amaldiçoado','Maledictus'],['Sanctum Fallen','Olho da Tempestade','Scylla']]},
+ extra:'O olho é gasto ao teleportar. Camas explodem nas arenas. A ligação olho → arena foi deduzida pelos nomes. Se algum não funcionar, confira no JEI.',bosses:[]},
+{t:'Steamworks Realm',mod:'Create: Dimension',ic:'⚙️',tipo:'portal',tag:'dim',
+ resumo:'Dimensão de mineração com minérios exclusivos, feita pra Create.',
+ como:['Moldura de <b>Train Casing</b> com abertura 2×3.','Crafte o <b>Portal Igniter</b> e clique na moldura.','<b>Trens passam pelo portal</b>: coloque trilho na frente.'],
+ figs:[fig(nether('T','Y'),'Moldura de Train Casing.'),craft([['Aa','Andesite Alloy','#9aa29a'],['Sx','Sílex','#777'],_,_,_,_,_,_,_],'Portal Igniter','Sem formato fixo.')],bosses:[]},
+{t:'Void (mundo vazio)',mod:'Just Another Void Dimension',ic:'⬛',tipo:'item',tag:'dim',
+ resumo:'Plataforma no nada, pra skyblock, fazendas ou construir em paz.',
+ como:['Crafte o <b>Portal Block</b>.','Coloque no chão e clique com uma <b>Pérola do Ender</b> pra ativar.','Clique de novo pra ir.'],
+ figs:[craft([OB,OB,OB,OB,EP,OB,OB,OB,OB],'Portal Block')],bosses:[]}
+];
+
+const BOSSES=[
+{n:'Monstruosidade de Netherita',mod:'Cataclysm',w:'nether',st:5,
+ onde:'Forja das Almas: estrutura de blackstone no Nether (Nether Wastes, florestas Carmesim e Distorcida, Vale das Almas).',
+ como:'Não precisa de item. Ela dorme numa alcova de lava no centro e acorda quando você chega a uns 16 blocos.',
+ drops:'Infernal Forge (martelo), Chifre Monstruoso, Células de Lava, Boss Respawner',dica:'600 de vida, a maior do Cataclysm. Ela se cura drenando a lava em volta e entra em fúria com 240 de vida.',olho:['Olho Monstruoso',[['Lv','Balde de Lava','#e8762b'],['Ns','Sucata de Netherite','#5b4a45'],['Lv','Balde de Lava','#e8762b'],['Bs','Blackstone','#2f2b33'],EE,['Bs','Blackstone','#2f2b33'],['Lv','Balde de Lava','#e8762b'],['Ns','Sucata de Netherite','#5b4a45'],['Lv','Balde de Lava','#e8762b']]]},
+{n:'Ender Guardian',mod:'Cataclysm',w:'end',st:4,
+ onde:'Cidadela em Ruínas: fortaleza de obsidiana no End (Highlands/Midlands). Precisa matar o Dragão antes.',
+ como:'O Altar do Vazio, lá embaixo, invoca o boss quando você chega a 6 blocos.',
+ drops:'Gauntlet of Guard. Os Núcleos do Vazio vêm dos Ender Golems.',dica:'333 de vida. Flecha e tridente ricocheteiam até o capacete quebrar, na metade da vida. Na fase 2 o chão quebra.',olho:['Olho do Vazio',[['Pp','Pilar de Púrpura','#a77aa7'],['Sh','Casco de Shulker','#9c6f9c'],['Pp','Pilar de Púrpura','#a77aa7'],['Te','Tijolos de Pedra do End','#e2dfa4'],EE,['Te','Tijolos de Pedra do End','#e2dfa4'],['Pb','Bloco de Púrpura','#a77aa7'],['Sh','Casco de Shulker','#9c6f9c'],['Pb','Bloco de Púrpura','#a77aa7']]]},
+{n:'Harbinger',mod:'Cataclysm',w:'ow',st:4,
+ onde:'Fábrica Ancestral: subterrânea, por volta de Y -30, em cavernas (Lush Caves, Dripstone, Deep Dark).',
+ como:'Fica desligado até você ativá-lo com uma <b>Estrela do Nether</b>.',
+ drops:'Bloco de Witherite (única fonte do mod, vira 9 lingotes)',dica:'390 de vida. Abaixo da metade, flechas e tridentes param de causar dano. A Witherite libera a Mechanical Fusion Anvil.',olho:['Olho Mecânico',[['Rb','Bloco de Redstone','#b5281f'],['Fe','Lingote de Ferro','#d9d9d9'],['Rb','Bloco de Redstone','#b5281f'],['Fe','Lingote de Ferro','#d9d9d9'],EE,['Fe','Lingote de Ferro','#d9d9d9'],['Rb','Bloco de Redstone','#b5281f'],['Fe','Lingote de Ferro','#d9d9d9'],['Rb','Bloco de Redstone','#b5281f']]]},
+{n:'Ancient Remnant',mod:'Cataclysm',w:'ow',st:3,
+ onde:'Pirâmide Amaldiçoada: no Deserto, com a metade de baixo enterrada uns 40 blocos.',
+ como:'Dorme na câmara de baixo até você entregar o <b>Colar do Deserto</b>. Ele sai de Areia Suspeita (use o pincel). Tem 12 manchas, e uma sempre tem o colar.',
+ drops:'Tornado na Garrafa, Crânio do Remnant (pet), Bloco de Metal Ancestral',dica:'450 de vida. Quando a barra de raiva enche, ele fica atordoado e vulnerável a flechas.',olho:['Olho do Deserto',[['Ou','Lingote de Ouro','#f0c94a'],['Ae','Arenito Talhado','#d8c88a'],['Es','Esmeralda','#3bd17b'],['Am','Arbusto Morto','#8a6b3b'],EE,['Ca','Cacto','#3d8b37'],['Cp','Carne Podre','#8a4e3a'],['Ae','Arenito Talhado','#d8c88a'],['Os','Osso','#e8e2d0']]]},
+{n:'Leviatã',mod:'Cataclysm',w:'ow',st:5,
+ onde:'Cidade Abissal: cidade em ruínas de 3 níveis no fundo do oceano profundo.',
+ como:'Coloque o <b>Sacrifício Abissal</b> no <b>Altar do Abismo</b>, na arena alagada lá no fundo.',
+ drops:'Garras das Marés, Ovo Abissal (Bebê Leviatã de pet)',dica:'Não leva dano fora da água e cada golpe tem dano máximo de 20. Coma <b>Carne de Caranguejo de Ametista Abençoada</b> (abençoe no Altar de Ametista do templo) pra resistir aos efeitos dele.',olho:['Olho do Abismo',[['Oc','Obsidiana Chorona','#5a2a8a'],OB,['Oc','Obsidiana Chorona','#5a2a8a'],OB,EE,OB,['Oc','Obsidiana Chorona','#5a2a8a'],OB,['Oc','Obsidiana Chorona','#5a2a8a']]]},
+{n:'Scylla',mod:'Cataclysm',w:'ow',st:5,
+ onde:'Acrópole: templo de Azure Seastone flutuando em Y ~200 sobre Oceanos Mornos.',
+ como:'Ela dorme no centro. Clique direito nela pra começar.',
+ drops:'Lacrima e Essência da Tempestade (pra Astrape e Ceraunus)',dica:'390 de vida em 3 fases. O raio dela ignora armadura e escudo (Proteção ainda reduz). Chegar no templo já é um desafio, e os guardiões não renascem.',olho:['Olho da Tempestade',[['Fp','Fragmento de Prismarinho','#5fb3a3'],['Pr','Para-raios','#c07a4a'],['Fp','Fragmento de Prismarinho','#5fb3a3'],['Di','Diamante','#5ee0d6'],EE,['Di','Diamante','#5ee0d6'],['Cr','Cristais de Prismarinho','#a6e6d2'],['Ag','Balde de Água','#3d7fe0'],['Cr','Cristais de Prismarinho','#a6e6d2']]]},
+{n:'Maledictus',mod:'Cataclysm',w:'ow',st:3,
+ onde:'Prisão do Gelo: dungeon congelada nas Planícies Nevadas.',
+ como:'Um <b>Aptrgangr</b> dropa a <b>Chave Estranha</b>, que abre a Porta do Selo no último andar. Atrás dela, a <b>Lápide Amaldiçoada</b> invoca o boss.',
+ drops:'Lingotes de Cursium (armadura Cursium, Soul Render, Annihilator, Arco Amaldiçoado)',dica:'420 de vida. A raiva dele soma 20% de dano a cada golpe que acerta em você. A lápide recarrega em ~1 minuto pra revanche. Bom primeiro boss do Cataclysm.',olho:['Olho Amaldiçoado',[['Ou','Lingote de Ouro','#f0c94a'],['Os','Osso','#e8e2d0'],['Ou','Lingote de Ouro','#f0c94a'],['Mf','Membrana de Phantom','#8f9bc4'],EE,['Mf','Membrana de Phantom','#8f9bc4'],['Ou','Lingote de Ouro','#f0c94a'],['Cp','Carne Podre','#8a4e3a'],['Ou','Lingote de Ouro','#f0c94a']]]},
+{n:'Ignis',mod:'Cataclysm',w:'nether',st:5,
+ onde:'Arena do Fogo: coliseu de tijolo do Nether, só nas Nether Wastes.',
+ como:'Mate os 2 <b>Fantasmas Incendiados</b> do andar de baixo. Eles dropam <b>Cinzas Ardentes</b>. Coloque as cinzas no <b>Altar do Fogo</b>, no último andar.',
+ drops:'3 Lingotes de Ignitium (armadura Ignitium, Incinerador, Bulwark of the Flame, Blazing Grips)',dica:'450 de vida em 3 fases. O escudo bloqueia ataques de frente até você rebater as bolas de fogo do Abismo nele 3 vezes. A Marca Ardente tira armadura e cura ele. É o boss final do Cataclysm.',olho:['Olho de Fogo',[['Pb','Pó de Blaze','#f0a63a'],['Pb','Pó de Blaze','#f0a63a'],['Pb','Pó de Blaze','#f0a63a'],['Ns','Sucata de Netherite','#5b4a45'],EE,['Ns','Sucata de Netherite','#5b4a45'],['Aa','Areia das Almas','#5b4636'],['Aa','Areia das Almas','#5b4636'],['Aa','Areia das Almas','#5b4636']]]},
+
+{n:'Esqueletossauro',mod:'Monstros Lendários',w:'nether',st:3,onde:'Ninho do Esqueletossauro, no Vale das Almas.',como:'Ache o ninho e entre na arena. O boss fica lá.',olhoLM:'Olho de Ossos (8 Ossos em volta de 1 Pérola do Ender)'},
+{n:'Abominação Decomposta',mod:'Monstros Lendários',w:'nether',st:4,onde:'Restos da Fortaleza da Alma (Vale das Almas, Nether Wastes).',como:'Fica na estrutura.',olhoLM:'Olho da Alma (Areia das Almas + Pérola)'},
+{n:'Colosso do Musgo',mod:'Monstros Lendários',w:'ow',st:2,onde:'Templo Musgoso, na Selva.',como:'Fica no templo.',olhoLM:'Olho de Musgo (Blocos de Musgo + Pérola)',drops:'Cristal da Natureza → Totem de Musgo (invoca um Golem Musgoso aliado que acelera plantações)'},
+{n:'Guardião Ancestral',mod:'Monstros Lendários',w:'ow',st:3,onde:'Forte Ancestral, em Floresta Escura e Taiga.',como:'Fica no forte.',olhoLM:'Olho de Muitas Costelas (Blocos de Espeleotema + Pérola)'},
+{n:'Shulker Mímico',mod:'Monstros Lendários',w:'end',st:3,onde:'Torre de Shulker, no End.',como:'Fica na torre.',olhoLM:'Olho de Shulker (Pedra do End + Pérola)'},
+{n:'Sentinela do Coro',mod:'Monstros Lendários',w:'end',st:4,onde:'Restos da Torre Ancestral, no End.',como:'Fica na torre.',olhoLM:'Olho do Coro (Frutas do Coro + Pérola)'},
+{n:'Cumulonimbus, Golem das Nuvens',mod:'Monstros Lendários',w:'ow',st:3,onde:'Templo Nebuloso, em montanhas (picos, prados, cerejeiras).',como:'Fica no templo.',olhoLM:'Olho do Ar (Penas + Pérola)'},
+{n:'Devora-Lava',mod:'Monstros Lendários',w:'nether',st:3,onde:'Ninho do Devora-Lava, nas Nether Wastes.',como:'Fica no ninho.',olhoLM:'Olho de Magma (Blocos de Magma + Pérola)'},
+{n:'Golem Gélido',mod:'Monstros Lendários',w:'ow',st:2,onde:'Templo Gélido (Planícies Nevadas, Taiga Nevada, Picos de Gelo).',como:'Fica no templo.',olhoLM:'Olho de Gelo (Bolas de Neve + Pérola)'},
+{n:'Fungoso Distorcido',mod:'Monstros Lendários',w:'nether',st:3,onde:'Ninho na Floresta Distorcida.',como:'Fica no ninho. Ele se teleporta.'},
+{n:'Sentinela das Dunas',mod:'Monstros Lendários',w:'ow',st:3,onde:'Pirâmide Arruinada, no Deserto.',como:'Fica na pirâmide.',olhoLM:'Olho da Tempestade de Areia (Arenito + Pérola)'},
+{n:'Dupla Assombrada + Paladino Possuído',mod:'Monstros Lendários',w:'ow',st:4,onde:'Cripta Abandonada, em montanhas (prados, picos, cerejeiras).',como:'Cavaleiro e Guarda Assombrados ficam na cripta. Os <b>Invocadores</b> (de Cavaleiro e de Guarda) são feitos com Alma Corrompida + espada/alabarda + ferro. Use a <b>Chave Sombria</b> pra quebrar os cadeados dos alçapões.',olhoLM:'Olho Fantasma (Tochas das Almas + Pérola)'},
+{n:'Cavaleiro Decapitado / Ressuscitado / Apóstolo Fraturado',mod:'Monstros Lendários',w:'ow',st:4,onde:'Reino Desmoronado (planícies, florestas de bétula).',como:'Ficam na estrutura.'},
+{n:'O Obliterador',mod:'Monstros Lendários',w:'end',st:5,onde:'Estação Espacial, no End.',como:'Coloque um <b>Olho de Cristal</b> na <b>máquina de teleporte</b> da estação pra invocar.',olhoLM:'Olho da Aniquilação (Gemas de Enderitium + Olho do Ender)',dica:'O boss final do Monstros Lendários.'},
+
+{n:'Ashlord, o Dragão Infernal',mod:'Block Factory\'s Bosses',w:'ow',st:4,onde:'Torre do Dragão: planícies, selvas, pântanos, savanas e colinas.',como:'Fica na torre. Chegue perto pra começar.',drops:'Ossos de dragão (armadura de Ossos de Dragão)'},
+{n:'Nerakyss, o Kraken',mod:'Block Factory\'s Bosses',w:'ow',st:4,onde:'Navio do Kraken, em oceanos profundos.',como:'Fica no navio, com o Capitão Pirata.',drops:'Tridente do Kraken'},
+{n:'Sirok, o Verme das Areias',mod:'Block Factory\'s Bosses',w:'ow',st:2,onde:'Ninho do Verme, no Deserto.',como:'Fica no ninho.',drops:'Manopla do Verme das Areias'},
+{n:'Helvar, o Cavaleiro do Submundo',mod:'Block Factory\'s Bosses',w:'nether',st:4,onde:'Arena do Submundo (Nether Wastes, Vale das Almas).',como:'Fica na arena.',drops:'Tentáculo Imortal (invoca tentáculos aliados)'},
+{n:'Skor, o Yeti',mod:'Block Factory\'s Bosses',w:'ow',st:2,onde:'Esconderijo do Yeti, nas Planícies Nevadas.',como:'Fica no esconderijo.',drops:'Manopla de Gelo'},
+
+{n:'O Charro Negro',mod:'Myths & Legends',w:'ow',st:3,onde:'Altar dos Mortos: estrutura rara em Desertos e Badlands.',como:'Leve o <b>Amuleto Vinculador de Almas</b> (pepitas e lingotes de ouro + Chama Etérea) e faça o ritual <b>de noite</b> no altar.',drops:'Umbra\'s Whisper',dica:'Ele se teleporta, invoca Almas Condenadas e se regenera até 2 vezes.'},
+{n:'Amarok',mod:'Myths & Legends',w:'ow',st:3,onde:'Biomas nevados, na lua cheia.',como:'Aparece pra quem anda sozinho na neve à noite de lua cheia.',drops:'Essência e Pele de Amarok (armadura Frosthowl)'},
+{n:'Karakondjul',mod:'Myths & Legends',w:'ow',st:3,onde:'Regiões nevadas.',como:'O "caçador da meia-noite": aparece à noite.',drops:'Núcleo Congelado (armas de gelo)'},
+{n:'Abaddon',mod:'Myths & Legends',w:'nether',st:4,onde:'Nether.',como:'Encontrado no mundo.',drops:'Núcleo de Abaddon'},
+{n:'Égide Nascida da Guerra',mod:'Myths & Legends',w:'ow',st:4,onde:'Estruturas do mod.',como:'Encontrada no mundo.'},
+{n:'Gárgula',mod:'Myths & Legends',w:'ow',st:2,onde:'Ancient Vestiges.',como:'Parada de dia, ataca de noite.',drops:'Fragmentos de Gárgula (Machado de Gárgula, Escudo de Pedra)'},
+
+{n:'Bosses da Maldição Ominosa',mod:'Fights & Frights',w:'ow',st:4,onde:'Qualquer lugar.',como:'Crafte a <b>Maldição Vazia</b> (2 Algemas + 2 Placas Monstruosas + Totem da Imortalidade). Depois a <b>Maldição Ominosa</b> (Chifre de Devastador, Sucata Carregada, Espinha Ancestral, Fragmento de Eco, Pulmões de Banshaa, Placas Monstruosa e Ominosa + a Maldição Vazia). Clique com ela num <b>Piglin, Illager ou morto-vivo</b> pra virar boss.',drops:'Gema Ominosa, Cetro Ominoso, Presa Ominosa',dica:'Bosses: Monarca Malicioso, Comandante Insensível, Beligerante Maligno e Malfeitor Imperial. A regra <code>doBossRituals</code> precisa estar ligada.'},
+{n:'Reanimado',mod:'Fights & Frights',w:'ow',st:3,onde:'Estrutura especial do mod.',como:'Acerte a estrutura com um tridente encantado com <b>Canalização</b>.'},
+
+{n:'Slider',mod:'Aether',w:'dim',st:2,onde:'Dungeon de Bronze.',como:'Bata nele com uma <b>picareta</b> pra acordar. Ele desliza em linha reta.',drops:'Chave de Bronze (abre o baú do tesouro)'},
+{n:'Rainha Valquíria',mod:'Aether',w:'dim',st:3,onde:'Dungeon de Prata.',como:'Mate as Valquírias menores pra pegar <b>10 Medalhas da Vitória</b>. Entregue à Rainha pra provar que é digno.',drops:'Chave de Prata, Capa e equipamentos de Valquíria'},
+{n:'Sun Spirit',mod:'Aether',w:'dim',st:4,onde:'Dungeon de Ouro.',como:'Fale com ele no fim da dungeon.',drops:'Chave de Ouro, Altar do Sol (controla o horário)'},
+{n:'Eye of the Storm',mod:'Deep Aether',w:'dim',st:4,onde:'Brass Dungeon, nos biomas de nuvem de tempestade do Aether.',como:'Bata no redemoinho de vento pra começar.',drops:'Chave de Latão, Storm Sword, Storm Bow, Squall Plate (armadura Stormforged)'},
+
+{n:'O Vigilante',mod:'DivineRPG',w:'nether',st:3,onde:'Nether.',como:'Use o <b>Chamado do Vigilante</b> no Nether.',drops:'Fragmentos Divinos',dica:'As bolas de fogo dele explodem e destroem o cenário.'},
+{n:'Rei dos Incendiários',mod:'DivineRPG',w:'nether',st:3,onde:'Nether.',como:'Use a <b>Chama Infernal</b>.',drops:'Pedra de Fogo das Almas, Pedra de Fogo da Fúria'},
+{n:'Horda de Ayeracos',mod:'DivineRPG',w:'end',st:3,onde:'End.',como:'Use o <b>Chifre da Horda</b> no End. São 6 mini-bosses que se ajudam.',drops:'Fragmentos Divinos'},
+{n:'Bosses do Crepúsculo',mod:'DivineRPG',w:'dim',st:4,onde:'Éden, Floresta Selvagem, Apaláchia, Skythern, Mortum.',como:'Tempestade Solar (Éden), Termasect (Floresta), Arqueiro Eterno (Apaláchia) e Cori Experiente (Skythern) ficam em dungeons ativadas com chunks. Densos, Reyvor, Soul Fiend, Twilight Demon, Vamacheron e Karot são invocados com itens.',drops:'Corações que abrem a próxima dimensão'},
+{n:'Dramix e Parasecta',mod:'DivineRPG',w:'dim',st:4,onde:'Arcana.',como:'Clique com o <b>Livro do Mago</b> no altar de cada um.'},
+{n:'Bosses de Vethea',mod:'DivineRPG',w:'dim',st:4,onde:'Vethea.',como:'Quadro, Dr. Karos e Raglok: <b>Sílex de Sonho</b> no altar. Lady Luna: <b>Relógio Lunar</b> no Altar Lunic. Rainha da Colmeia: encontrada em Vethea.'},
+
+{n:'Mud Cycle Mage / Lunar Priest / Chained God / Lilith',mod:'Aerial Hell',w:'dim',st:4,onde:'Mud Dungeon, Lunatic Temple, Golden Nether Prison e Shadow Catacombs, no Aerial Hell.',como:'Cada um no fim da sua dungeon.'},
+{n:'Capitão Revenant e Arachne',mod:'Lands of Icaria',w:'dim',st:3,onde:'Vilas danificadas (Capitão) e vilas em ruínas (Arachne), em Icaria.',como:'Sempre tem um deles guardando cada vila.'},
+{n:'Monarch',mod:'The Sift',w:'dim',st:4,onde:'Sculkers\' Lair, no Sift.',como:'Coloque a <b>Sculkflower</b> em cima de <b>Royal Sculk</b>.',drops:'Membrana do Monarch → Elytra do Monarch (ganha altitude planando)'},
+{n:'Fallen King e Basalisk',mod:'Moria Depths',w:'dim',st:4,onde:'Salas do trono (Rei) e cavernas (Basalisk), em Moria.',como:'Encontrados nas estruturas.',drops:'Tesouros reais'},
+{n:'Minotauro e Braseiro Amaldiçoado',mod:'Asterion',w:'dim',st:4,onde:'Labirinto.',como:'O Braseiro precisa da <b>Chave do Braseiro Amaldiçoado</b>. O Minotauro fica no fundo do labirinto.'},
+{n:'Dragão das Nuvens',mod:'Seroka Karman',w:'dim',st:4,onde:'Mar de Karman.',como:'Arremesse o <b>Olho do Dragão</b> (Pérola do Ender + Vara de Brisa) pro céu.',drops:'Chifre e Cabeça do Dragão',dica:'Só existe um, e ele não renasce sozinho. O Veneno do Abismo racha a armadura dele.'},
+{n:'Barba Morta e Imortal',mod:'Rotten Creatures',w:'ow',st:2,onde:'Mundo (Barba Morta é pirata).',como:'Mini-bosses naturais. Barba Morta guarda um tesouro.'}
+];
+
+const EVENTOS=[
+{t:'Lua de Sangue',ic:'🩸',d:'Mortos-vivos aparecem na superfície e você <b>não consegue dormir</b>. A Super Lua de Sangue é mais forte e mobs aparecem mais perto.'},
+{t:'Lua Azul',ic:'🔵',d:'Dá sorte: bigorna e encantamento ficam mais baratos e o alcance do farol aumenta. A Super Lua Azul é ainda melhor.'},
+{t:'Lua da Colheita',ic:'🌾',d:'As plantações dropam mais. A Super Lua da Colheita dá uma colheita excepcional.'},
+{t:'Super Lua',ic:'🌕',d:'Slimes aparecem em todo lugar por perto.'},
+{t:'Lua dos Zumbis Extremos',ic:'🧟',d:'Datapack ExtremeZombieMoon: noite com zumbis muito mais fortes. Fique protegido.'},
+{t:'Amarok na lua cheia',ic:'🐺',d:'Na lua cheia, quem anda sozinho na neve pode ser caçado pelo Amarok (Myths & Legends).'},
+{t:'Arena Celestial',ic:'⚔️',d:'Sky Arena: ache uma Arena Celestial ou de Gelo e toque na espada do <b>Altar da Batalha</b> pra começar ondas de mobs. A cada vitória a dificuldade sobe. Um <b>lingote de Netherite</b> no altar reseta a dificuldade, um <b>graveto</b> para a música. Recompensa: chaves que enchem baús vazios com saque (Shift + clique direito).'},
+{t:'Saques e invasões',ic:'🏹',d:'Takes a Pillage, Villager Patrols, Illager Fortress e Millager deixam os Illagers mais fortes, com Bastilhas e acampamentos. O Millager adiciona reforços dos aldeões e itens como o Coquetel Molotov e o TNT no bastão.'},
+{t:'Infecção (Fights & Frights)',ic:'🦠',d:'Se a regra <code>doInfection</code> estiver ligada, mortos-vivos e carne crua passam uma infecção. A cura é o <b>Antídoto</b> (de ensopado suspeito ou flor). A Seringa com Antídoto cura NPCs.'},
+{t:'Fendas do Sift',ic:'🌀',d:'Fendas temporárias (5 min) entre o Sift e o Overworld, que podem trazer mobs.'},
+{t:'Besouros mímicos',ic:'🪲',d:'Fights & Frights: alguns minérios são besouros disfarçados. Cuidado ao minerar.'}
+];
+
+const MODS=[
+{c:'Bosses & Aventura',ic:'⚔️',l:[
+ ['L_Ender\'s Cataclysm','8 bosses em dungeons gigantes, com armas e armaduras únicas. Veja a aba Bosses.'],
+ ['Cataclysm Dimensions','Leva cada boss do Cataclysm pra uma arena própria. Shift + clique com o olho.'],
+ ['Simply Cataclysm','Compatibilidade entre o Cataclysm e o Simply Swords.'],
+ ['Legendary Monsters','12 bosses com lore. Cada um tem um "olho" (8 itens + 1 Pérola do Ender) que aponta pra estrutura dele.'],
+ ['Block Factory\'s Bosses','5 bosses animados (Dragão, Kraken, Verme, Cavaleiro do Submundo, Yeti), cada um numa estrutura.'],
+ ['Myths & Legends','Criaturas do folclore: Charro Negro, Amarok, Gárgula, Abaddon, Karakondjul, armaduras possuídas.'],
+ ['Mythika','Mais criaturas míticas.'],
+ ['Fights & Frights','Monstros estilo vanilla, mímicos, infecção e bosses invocados com a Maldição Ominosa.'],
+ ['Sky Arena','Arenas de ondas de mobs com dificuldade crescente e troféus.'],
+ ['Illager Fortress / Takes a Pillage / Villager Patrols','Fortalezas, bastilhas e patrulhas de Illagers mais perigosas.'],
+ ['Valarian Conquest','Reinos Valarianos com cidadãos, soldados e armas de cerco (balista, catapulta, canhão, aríete). Tem profissões novas como Engenheiro de Cerco.']]},
+{c:'Dimensões',ic:'🌀',l:[
+ ['The Aether + Deep Aether + addons','Céu com dungeons. Os addons (Beyond Parity, Explore Ruins) adicionam conteúdo e ruínas.'],
+ ['DivineRPG','8 dimensões, mais de 115 mobs e bosses. Tem livro-guia no jogo.'],
+ ['Aerial Hell','Ilhas flutuantes com 4 bosses.'],['Lands of Icaria','Grécia antiga com mineração por camadas.'],['Mielon\'s The Sift','Sculk e Icor, portal musical.'],
+ ['Moria Depths','Reino anão subterrâneo.'],['Asterion','Labirinto do Minotauro.'],['Seroka Karman / Seroka Ocean','Mar de nuvens. O Seroka Ocean adiciona chaminés hidrotermais, salmoura e sargaço no oceano.'],
+ ['Create: Dimension','Dimensão de mineração pro Create.'],['JAVD','Mundo vazio.'],
+ ['Unusual End / Nullscape / Finality Reforged','Deixam o End muito mais variado: biomas, mobs (Bluk, Ender Trapper, Errante, Raia do Vazio) e itens. O Finality tem Enderita e Tungstênio.']]},
+{c:'Tecnologia (Create)',ic:'⚙️',l:[
+ ['Create','Máquinas mecânicas: engrenagens, esteiras, trens, prensas, misturadores. Aperte <b>W</b> em cima de um bloco do Create pra ver a animação Ponder ensinando.'],
+ ['Create Crafts & Additions','Eletricidade e geradores.'],['Create Connected / Deco / Transmission','Blocos extras, decoração e transmissão.'],
+ ['Create Enchantment Industry','Encantar e guardar XP com máquinas.'],['Create Mechanical Spawner','Spawner automático.'],['Create Central Kitchen / Confectionery','Cozinha automática e doces.'],
+ ['Create Dragons Plus / Hypertube / Escalated','Extras: tubos de transporte de jogadores e escadas rolantes.'],['Create Ultimate Factory','Receitas de fábrica.'],['Sentry Mechanical Arm','Braço mecânico que funciona como sentinela.'],
+ ['Pretty Pipes','Canos de itens com filtros.'],['Tom\'s Simple Storage','Armazenamento central num terminal.']]},
+{c:'Recursos & Farm',ic:'🌱',l:[
+ ['Mystical Agriculture + Agradditions','Plante sementes de recursos (ferro, diamante etc.). Comece com Essência de Inferium (minério). Tiers: Inferium → Prudentium → Tertium → Imperium → Supremium. Use o Altar de Infusão pra fazer sementes.'],
+ ['Crystalcraft Unlimited','Mais de 87 metais e ligas, gemas e cristais (Urânio, Clorônio, Humorânio, Diamante do Eclipse...), com espadas absurdas.'],
+ ['Gobber','Minério Gobber com equipamentos fortes e anéis/medalhões de efeito.'],
+ ['Farmer\'s Delight / Croptopia','Culinária, fogão, faca e centenas de plantações.'],['Right Click Harvest','Colha com clique direito sem quebrar a planta.'],
+ ['Aquaculture','Pesca com peixes novos, varas e caixas de tesouro.'],['Animal Feeding Trough','Comedouro que alimenta os animais sozinho.'],['Iron Furnaces','Fornalhas mais rápidas.'],['MC Jade Crops','Plantação de jade.']]},
+{c:'Combate & Equipamento',ic:'🗡️',l:[
+ ['Epic Knights (+ addons)','Armaduras e armas medievais realistas. Algumas exigem forja.'],['Simply Swords','Armas únicas com habilidades, achadas em baús.'],
+ ['TACZ (+ addons)','Armas de fogo. Use a mesa de armeiro pra fabricar.'],['Armor of the Ages / Reforged Armors','Mais conjuntos de armadura.'],
+ ['Month of Swords / Lunar Swords / More Swords / Cyan Warrior','Muitas espadas novas.'],['Weapon Master','Pendure suas armas no corpo (visual).'],
+ ['Leveling Up','Núcleos de Afiação (Endurecido, Ardente) pra evoluir equipamento.'],['Angel Ring','Anel que deixa você voar.'],['Not Enough TNT','TNTs novas.']]},
+{c:'Companheiros & NPCs',ic:'🧑‍🤝‍🧑',l:[
+ ['Modern Companions','Contrate companheiros (Cavaleiro, Arqueiro, Clérigo...). A <b>Varinha de Convocação</b> (Pérola do Ender, Vara de Pescar, Pó de Glowstone) chama eles até você. O Pergaminho de Ressurreição precisa de uma Estrela do Nether.'],
+ ['Villagers Reborn','Aldeões humanos com famílias (Amuleto Familiar) e túmulos. Uma Gema da Alma ressuscita o aldeão.'],
+ ['Modular Golems','Monte golems de metal: Molde de Golem → Cortador de Pedra → partes. Dá pra dar habilidades de bosses do Cataclysm pra eles.'],
+ ['Golems Are Friends','Golems não te atacam.'],['Millager','Comandante e tropas de aldeões contra saques.'],['Two Players One Horse','Duas pessoas no mesmo cavalo.']]},
+{c:'Origens',ic:'🧬',l:[
+ ['NeoOrigins (+ Fantasy, Furries)','Escolha uma origem no primeiro login (Abissal, Caveborn, Avian, Blazeling, Necromante...). Cada uma tem poderes e fraquezas. O <b>Orbe de Origem</b> reseta a escolha (o primeiro uso é grátis, depois custa 5 níveis por uso anterior). O Orbe de Classe reseta só a classe (2 níveis).']]},
+{c:'Mobs & Mundo',ic:'🐾',l:[
+ ['Luminous Beasts / Monsters / Butterflies','Animais e monstros que brilham.'],['Monster Plus / Spooki\'s Unique Mobs / Undead Unleashed / HMAG','Muitos mobs hostis novos.'],
+ ['Rotten Creatures','Mortos-vivos variados: Múmia, Congelado, Barba Morta, Imortal.'],['Reanimal / Expanded Ecosphere / Untitled Duck','Animais novos.'],
+ ['Upgrade Aquatic / Deeper Oceans / Ben\'s Sharks / Ocean Giants','Oceano mais vivo e perigoso.'],
+ ['CTOV / Formations / Better Bastions / Desert Temples / Shipwrecks / Toni Structures','Vilas e estruturas melhores.'],['Rota Roads','Estradas ligando estruturas.'],
+ ['Enhanced Celestials','Luas especiais (veja Eventos).'],['Dynamic Surroundings / Sound Physics / Presence Footsteps','Sons ambientes realistas.']]},
+{c:'Utilidades',ic:'🧰',l:[
+ ['JEI + Jade','Receitas (R/U) e informação do bloco que você está olhando.'],['JourneyMap','Mapa e waypoints.'],['Explorer\'s Compass','Acha estruturas.'],
+ ['Waystones','Teleporte entre pedras. Um pergaminho vazio usado num Obelisco fica vinculado a ele.'],['Corpse (+ Curios compat)','Seus itens ficam num cadáver quando você morre.'],
+ ['Easy Homes / TPA','/sethome, /home, /tpa.'],['Sophisticated Backpacks / Storage','Mochilas e baús com upgrades.'],['Trash Cans','Lixeiras.'],
+ ['Item Collectors','Coletores de itens no chão.'],['Polymorph','Escolhe a receita quando duas usam os mesmos itens.'],['Mouse Tweaks','Arrastar itens mais rápido.'],
+ ['Immersive Aircraft','Aviões e dirigíveis.'],['Camera','Câmera pra tirar fotos no jogo.'],['Interiors / Macaw\'s (pontes, portas, cercas, janelas, alçapões)','Decoração.'],['Better Advancements','Tela de conquistas melhor.']]},
+{c:'Visual & Desempenho',ic:'✨',l:[
+ ['Sodium + Iris','Desempenho e shaders.'],['Distant Horizons','Distância de visão gigante (LOD).'],['ModernFix / FerriteCore / Entity Culling / More Culling / ImmediatelyFast','Desempenho e menos uso de RAM.'],
+ ['Better Clouds / Falling Leaves / Particle Interactions / Depth Fog / Fading Depths','Efeitos visuais.'],['EMF / ETF','Modelos e texturas de entidades.'],
+ ['Ragdollified / Item Physic Lite / Punchy','Física e animações.'],['Cinematic Respawn','Respawn com cena.']]}
+];
+
+const $=s=>document.querySelector(s);
+const norm=t=>String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/<[^>]+>/g,' ');
+function card(ic,title,sub,body,keyw,f){return `<div class="card" data-f="${(f||'').toLowerCase()}" data-k="${norm(keyw||'').replace(/"/g,'')}"><div class="ch"><div class="ic">${ic}</div><div class="tt"><b>${title}</b><small>${sub}</small></div><span class="ar">▾</span></div><div class="cb">${body}</div></div>`;}
+const WL={ow:['Overworld','ow'],nether:['Nether','nether'],end:['End','end'],dim:['Dimensão','dim']};
+const tipoN={portal:'Portal construído',item:'Item / ritual',found:'Achar no mundo'};
+function tab(t){return `<div class="tw"><table><tr>${t.h.map(x=>`<th>${x}</th>`).join('')}</tr>${t.r.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`;}
+
+function renderInicio(){
+  $('#tools').innerHTML=TOOLS.map(t=>`<div class="card"><div class="ch" style="cursor:default"><div class="ic">${t[0]}</div><div class="tt"><b>${t[1]}</b></div></div><div class="cb" style="display:block">${t[2]}</div></div>`).join('');
+  $('#prog').innerHTML=PROG.map((p,i)=>`<div class="step"><div class="n">${i+1}</div><div><b>${p[0]}</b><br><span style="color:var(--mu)">${p[1]}</span></div></div>`).join('');
+  $('#cmds').innerHTML=`<table><tr><th>Comando</th><th>O que faz</th></tr>${CMDS.map(c=>`<tr><td><code>${c[0]}</code></td><td>${c[1]}</td></tr>`).join('')}</table>`;
+}
+function renderDims(){
+  $('#l-dims').innerHTML=DIMS.map(d=>card(d.ic,d.t,`${d.mod} · ${tipoN[d.tipo]}`,
+   `<p>${d.resumo}</p><div class="k">Como entrar</div><ol>${d.como.map(s=>`<li>${s}</li>`).join('')}</ol>`+
+   (d.tabela?tab(d.tabela):'')+(d.figs?`<div class="figs">${d.figs.join('')}</div>`:'')+
+   (d.extra?`<div class="k">Dicas</div><p>${d.extra}</p>`:'')+
+   (d.bosses.length?`<div class="k">Bosses</div>${d.bosses.map(b=>`<span class="boss">${b[0]} <small>· ${b[1]}</small></span>`).join('')}`:''),
+   d.t+' '+d.mod+' '+d.resumo+' '+d.como.join(' ')+' '+(d.extra||'')+' '+d.bosses.flat().join(' '),d.tipo)).join('');
+}
+function renderBosses(){
+  $('#l-bosses').innerHTML=BOSSES.map(b=>{
+    const w=WL[b.w];
+    let body=`<div class="pills"><span class="pill ${w[1]}">${w[0]}</span><span class="pill">${b.mod}</span><span class="pill stars">${'★'.repeat(b.st)}${'☆'.repeat(5-b.st)}</span></div>`+
+      `<div class="k">Onde fica</div><p>${b.onde}</p><div class="k">Como acordar / invocar</div><p>${b.como}</p>`;
+    if(b.olho) body+=`<div class="k">Olho que acha a estrutura (e abre a arena)</div><div class="figs">${craft(b.olho[1],b.olho[0])}</div>`;
+    if(b.olhoLM) body+=`<div class="k">Olho que acha a estrutura</div><p>${b.olhoLM}</p>`;
+    if(b.drops) body+=`<div class="k">Drops</div><p class="drops">${b.drops}</p>`;
+    if(b.dica) body+=`<div class="tip">💡 ${b.dica}</div>`;
+    return card(b.w==='nether'?'🔥':b.w==='end'?'🟣':b.w==='dim'?'🌀':'🌳',b.n,`${b.mod} · ${'★'.repeat(b.st)}`,body,
+      [b.n,b.mod,b.onde,b.como,b.drops,b.dica,b.olhoLM,b.olho&&b.olho[0],w[0]].join(' '),b.w+'|'+b.mod);
+  }).join('');
+}
+function renderEventos(){
+  $('#l-eventos').innerHTML=EVENTOS.map(e=>card(e.ic,e.t,'',`<p>${e.d}</p>`,e.t+' '+e.d)).join('');
+}
+function renderMods(){
+  $('#l-mods').innerHTML=MODS.map(g=>`<h2 data-grp>${g.ic} ${g.c}</h2>`+g.l.map(m=>card(g.ic,m[0],g.c,`<p>${m[1]}</p>`,m[0]+' '+m[1]+' '+g.c,g.c).replace('class="card"','class="card open"')).join('')).join('');
+}
+const CHIPS={
+  dims:[['all','Todas'],['portal','Portal construído'],['item','Item / ritual'],['found','Achar no mundo']],
+  bosses:[['all','Todos'],['ow','Overworld'],['nether','Nether'],['end','End'],['dim','Dimensões'],['Cataclysm','Cataclysm'],['Monstros Lendários','Lendários'],['Block Factory','Block Factory'],['DivineRPG','DivineRPG'],['Aether','Aether']],
+  mods:[['all','Tudo']].concat(MODS.map(g=>[g.c,g.c]))
 };
-
-let filtro='all';
-function aplicar(){
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  document.querySelectorAll('.mod').forEach(m=>{
-    const okT = filtro==='all' || m.dataset.tipo===filtro;
-    const okQ = !q || m.textContent.toLowerCase().includes(q) || [...m.querySelectorAll('[data-t]')].some(e=>e.dataset.t.toLowerCase().includes(q));
-    m.style.display = okT && okQ ? '' : 'none';
-    if(q && okQ) m.classList.remove('closed');
-  });
+let page='inicio',chip='all';
+function setChips(){
+  const c=CHIPS[page]||[];
+  $('#chips').style.display=c.length?'flex':'none';
+  $('#chips').innerHTML=c.map(x=>`<span class="chip ${x[0]===chip?'on':''}" data-c="${x[0]}">${x[1]}</span>`).join('');
 }
-document.querySelectorAll('.chip[data-f]').forEach(c=>c.onclick=()=>{
-  document.querySelectorAll('.chip[data-f]').forEach(x=>x.classList.remove('on'));
-  c.classList.add('on'); filtro=c.dataset.f; aplicar();
+function filter(){
+  const q=norm($('#q').value.trim());
+  const sec=$('#p-'+page);
+  if(page==='inicio'&&q){go('bosses',true);return;}
+  let n=0,tot=0;
+  sec.querySelectorAll('.card[data-k]').forEach(c=>{
+    tot++;
+    const k=c.dataset.k;
+    const cc=chip.toLowerCase();const okC=chip==='all'||c.dataset.f.split('|').some(t=>t===cc||(cc.length>3&&t.includes(cc)));
+    const okQ=!q||q.split(/\s+/).every(w=>k.includes(w));
+    const ok=okC&&okQ;
+    c.style.display=ok?'':'none';
+    if(ok)n++;
+    if(q&&ok)c.classList.add('open');
+  });
+  if(page==='mods') sec.querySelectorAll('h2[data-grp]').forEach(h=>{let e=h.nextElementSibling,vis=false;while(e&&!e.matches('h2')){if(e.style.display!=='none')vis=true;e=e.nextElementSibling;}h.style.display=vis?'':'none';});
+  const cnt=$('#c-'+page); if(cnt) cnt.textContent=q||chip!=='all'?`${n} de ${tot}`:`${tot} itens`;
+}
+function go(p,keepQ){
+  page=p;chip='all';
+  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  if(!keepQ)$('#q').value='';
+  setChips();filter();
+  if(!keepQ) window.scrollTo({top:0});
+  history.replaceState(null,'','#'+p);
+}
+renderInicio();renderDims();renderBosses();renderEventos();renderMods();
+document.addEventListener('click',e=>{
+  const h=e.target.closest('.ch'); if(h&&h.parentElement.dataset.k!==undefined){h.parentElement.classList.toggle('open');return;}
+  const nb=e.target.closest('.nav button'); if(nb){go(nb.dataset.p);return;}
+  const ch=e.target.closest('.chip'); if(ch){chip=ch.dataset.c;setChips();filter();}
 });
-document.getElementById('q').oninput=aplicar;
+$('#q').addEventListener('input',()=>{ if(page==='inicio'&&$('#q').value.trim()){go('bosses',true);} else filter(); });
+const start=location.hash.slice(1); go(['inicio','dims','bosses','eventos','mods'].includes(start)?start:'inicio');
 </script>
 </body>
 </html>
